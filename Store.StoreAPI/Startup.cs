@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Store.Entity.Db;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Store.StoreAPI
 {
@@ -20,10 +21,14 @@ namespace Store.StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<StoreContext>(opt =>
+            services.AddDbContext<ApplicationContext>(opt =>
                 opt.UseInMemoryDatabase("Users"));
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1", new Info { Title = "Store API", Version = "V1" });
+            });
 
         }
 
@@ -44,6 +49,11 @@ namespace Store.StoreAPI
 
             app.UseHttpsRedirection();
             app.UseMvc();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "post API V1");
+            });
         }
     }
 }

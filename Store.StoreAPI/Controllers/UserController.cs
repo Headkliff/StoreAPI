@@ -12,9 +12,9 @@ namespace Store.StoreAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly StoreContext _context;
+        private readonly ApplicationContext _context;
 
-        public UserController(StoreContext context)
+        public UserController(ApplicationContext context)
         {
             _context = context;
 

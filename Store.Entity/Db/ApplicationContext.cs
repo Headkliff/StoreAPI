@@ -6,9 +6,9 @@ using Store.Entity.Models;
 
 namespace Store.Entity.Db
 {
-    public class StoreContext :DbContext
+    public class ApplicationContext :DbContext
     {
-        public StoreContext(DbContextOptions<StoreContext> options) : base(options) { }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) { }
 
 
         public DbSet<User> Users { get; set; }
