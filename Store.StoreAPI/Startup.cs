@@ -22,7 +22,9 @@ namespace Store.StoreAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseInMemoryDatabase("Users"));
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    x => x.MigrationsAssembly("Store.Entity")));
+            
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 

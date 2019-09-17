@@ -20,7 +20,7 @@ namespace Store.StoreAPI.Controllers
 
             if (!_context.Users.Any())
             {
-                _context.Users.Add(new User { id = Guid.NewGuid(), Nickname = "test1", Password = "test1", FirstName = "test1", SecondName = "test1"});
+                _context.Users.Add(new User { Id = 1,CreateDateTime = DateTime.Now, Nickname = "test1", Password = "test1", FirstName = "test1", SecondName = "test1" });
                 _context.SaveChanges();
             }
         }
