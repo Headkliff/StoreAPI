@@ -21,8 +21,10 @@ namespace Store.StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseInMemoryDatabase("Users"));
+            var connection = @"Server=(localdb)\mssqllocaldb;Database=StoreDB;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<ApplicationContext>
+                (options => options.UseSqlServer(connection));
+
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
