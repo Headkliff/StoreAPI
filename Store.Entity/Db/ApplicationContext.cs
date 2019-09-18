@@ -16,7 +16,7 @@ namespace Store.Entity.Db
                 new User
                 {
                     Nickname = "Standard 1", Password = "111", CreateDateTime = DateTime.Now, FirstName = "test",
-                    Id= 1L, SecondName = "test1", UpdateDateTime = null
+                    Id= 1L, SecondName = "test1", UpdateDateTime = null, Role = "User"
                 }
             );
         }
