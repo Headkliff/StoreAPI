@@ -20,17 +20,9 @@ namespace Store.Entity.Repository
 
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate =null)
+        public async Task<IQueryable<T>> GetAllAsync()
         {
-            if (predicate == null)
-            {
-                return await Task.Run(() => _dbSet.AsQueryable());
-            }
-            else
-            {
-                return await Task.Run(() => _dbSet.AsQueryable().Where(predicate));
-            }
-            
+            return await Task.Run(() => _dbSet.AsQueryable());
         }
 
         public async Task<T> GetByIdAsync(long id)

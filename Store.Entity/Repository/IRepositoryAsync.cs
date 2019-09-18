@@ -7,7 +7,7 @@ namespace Store.Entity.Repository
 {
     public interface IRepositoryAsync<T> where T: Models.EntityBase
     {
-        Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate = null);
+        Task<IQueryable<T>> GetAllAsync();
         Task<T> GetByIdAsync(long id);
 
         Task AddAsync(T entity);

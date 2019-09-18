@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Store.Entity.Db;
+using Store.BL.Services;
 using Store.Entity.Models;
 using Store.Entity.Repository;
 
@@ -13,11 +10,11 @@ namespace Store.StoreAPI.Controllers
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly IRepositoryAsync<User> _userRepositoryAsync;
+        private readonly IUserService _userService;
 
-        public UserController(IRepositoryAsync<User> userRepositoryAsync)
+        public UserController( IUserService userService)
         {
-            this._userRepositoryAsync = userRepositoryAsync;
+            _userService = userService;
         }
 
 
@@ -25,21 +22,22 @@ namespace Store.StoreAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTask()
         {
-            return Ok(await _userRepositoryAsync.GetAllAsync());
+            return Ok(await _userService.GetAllAsync());
         }
 
         // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserTask(long id)
         {
-            var user = await _userRepositoryAsync.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
 
             if (user == null)
             {
                 return NotFound();
+
             }
 
-            return user;
+            return Ok(user);
         }
     }
 }

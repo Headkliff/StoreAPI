@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Store.BL.Extensions;
+using Store.BL.Services;
 using Store.Entity.Db;
-using Store.Entity.Models;
 using Store.Entity.Repository;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -24,12 +26,13 @@ namespace Store.StoreAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped(typeof(IRepositoryAsync<>), typeof(EntityRepositoryAsync<>));
+            services.AddScoped<IUserService, UserService>();
 
             services.AddDbContext<ApplicationContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("Store.Entity")));
 
-
+            services.AddAutoMapper();
             
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
