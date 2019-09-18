@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Store.Entity.Db;
+using Store.Entity.Models;
+using Store.Entity.Repository;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Store.StoreAPI
@@ -21,6 +23,8 @@ namespace Store.StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped(typeof(IRepositoryAsync<>), typeof(EntityRepositoryAsync<>));
+
             services.AddDbContext<ApplicationContext>(opt =>
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("Store.Entity")));

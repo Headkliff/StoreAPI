@@ -6,31 +6,33 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Store.Entity.Db;
 using Store.Entity.Models;
+using Store.Entity.Repository;
 
 namespace Store.StoreAPI.Controllers
 {
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly ApplicationContext _context;
+        private readonly IRepositoryAsync<User> _userRepositoryAsync;
 
-        public UserController(ApplicationContext context)
+        public UserController(IRepositoryAsync<User> userRepositoryAsync)
         {
-            _context = context;
+            this._userRepositoryAsync = userRepositoryAsync;
         }
+
 
         // GET: api/User
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTask()
         {
-            return await _context.Users.ToListAsync();
+            return Ok(await _userRepositoryAsync.GetAllAsync());
         }
 
         // GET: api/User/5
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUserTask(Guid id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _userRepositoryAsync.GetByIdAsync(id);
 
             if (user == null)
             {
