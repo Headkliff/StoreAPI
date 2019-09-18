@@ -10,8 +10,8 @@ using Store.Entity.Db;
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190917123810_Init")]
-    partial class Init
+    [Migration("20190918065844_TestData")]
+    partial class TestData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,8 +23,11 @@ namespace Store.Entity.Migrations
 
             modelBuilder.Entity("Store.Entity.Models.User", b =>
                 {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDateTime");
 
                     b.Property<string>("FirstName");
 
@@ -34,7 +37,9 @@ namespace Store.Entity.Migrations
 
                     b.Property<string>("SecondName");
 
-                    b.HasKey("id");
+                    b.Property<DateTime>("UpdateDateTime");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });

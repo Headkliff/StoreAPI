@@ -17,12 +17,6 @@ namespace Store.StoreAPI.Controllers
         public UserController(ApplicationContext context)
         {
             _context = context;
-
-            if (!_context.Users.Any())
-            {
-                _context.Users.Add(new User { Id = 1,CreateDateTime = DateTime.Now, Nickname = "test1", Password = "test1", FirstName = "test1", SecondName = "test1" });
-                _context.SaveChanges();
-            }
         }
 
         // GET: api/User
