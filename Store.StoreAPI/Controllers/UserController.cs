@@ -30,7 +30,7 @@ namespace Store.StoreAPI.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUserTask(Guid id)
+        public async Task<ActionResult<User>> GetUserTask(long id)
         {
             var user = await _userRepositoryAsync.GetByIdAsync(id);
 

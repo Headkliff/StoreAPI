@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Store.Entity.Models
 {
@@ -11,6 +10,6 @@ namespace Store.Entity.Models
 
         public DateTime CreateDateTime { get; set; }
 
-        public DateTime UpdateDateTime { get; set; }
+        public DateTime? UpdateDateTime { get; set; }
     }
 }

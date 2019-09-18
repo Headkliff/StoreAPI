@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store.Entity.Db;
 
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20190918083244_SeedData1.1")]
+    partial class SeedData11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,8 +46,8 @@ namespace Store.Entity.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1L,
-                            CreateDateTime = new DateTime(2019, 9, 18, 11, 42, 35, 262, DateTimeKind.Local).AddTicks(2086),
+                            Id = -1L,
+                            CreateDateTime = new DateTime(2019, 9, 18, 11, 32, 44, 718, DateTimeKind.Local).AddTicks(4779),
                             FirstName = "test",
                             Nickname = "Standard 1",
                             Password = "111",
