@@ -85,7 +85,20 @@ namespace Store.StoreAPI.Controllers
 
         private ClaimsIdentity GetIdentity(string username, string password)
         {
-            var users = _userService.GetAllAsync();
+            var user = _userService.GetUserRegAsync(username, password);
+
+            if (user != null)
+            {
+                var claim = new List<Claim>
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, user.Result.Nickname),
+                    new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Result.Role)
+                };
+
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claim, "Token", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+
+                return claimsIdentity;
+            }
 
             return null;
         }

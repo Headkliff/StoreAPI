@@ -9,6 +9,7 @@ namespace Store.Entity.Repository
     {
         Task<IQueryable<T>> GetAllAsync();
         Task<T> GetByIdAsync(long id);
+        Task<T> GetByParamAsync(Expression<Func<T, bool>> expression);
 
         Task AddAsync(T entity);
         Task DeleteAsync(T entity);

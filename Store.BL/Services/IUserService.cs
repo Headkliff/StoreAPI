@@ -8,6 +8,7 @@ namespace Store.BL.Services
     {
         Task<IEnumerable<UserView>> GetAllAsync();
         Task<UserView> GetByIdAsync(long id);
+        Task<UserView> GetUserRegAsync(string nickname, string password);
 
         Task AddAsync(UserView entity);
         Task DeleteAsync(UserView entity);
