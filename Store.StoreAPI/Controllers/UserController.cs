@@ -65,7 +65,7 @@ namespace Store.StoreAPI.Controllers
                 issuer: AuthOptions.ISSUER,
                 audience: AuthOptions.AUDIENCE,
                 notBefore: now,
-                claims: identity.Claims,
+                claims: identity?.Claims,
                 expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
                 signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(),
                     SecurityAlgorithms.HmacSha256)
@@ -76,7 +76,7 @@ namespace Store.StoreAPI.Controllers
             var response = new
             {
                 access_token = encodedJwt,
-                username = identity.Name
+                username = identity?.Name
             };
 
             Response.ContentType = "application/json";

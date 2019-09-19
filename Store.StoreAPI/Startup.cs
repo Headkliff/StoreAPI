@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,7 +10,6 @@ using Store.BL.Auth;
 using Store.BL.Extensions;
 using Store.BL.Services;
 using Store.Entity.Db;
-using Store.Entity.Models;
 using Store.Entity.Repository;
 using Swashbuckle.AspNetCore.Swagger;
 
