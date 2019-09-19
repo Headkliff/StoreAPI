@@ -13,11 +13,7 @@ namespace Store.Entity.Db
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Nickname = "Standard 1", Password = "111", CreateDateTime = DateTime.Now, FirstName = "test",
-                    Id= 1L, SecondName = "test1", UpdateDateTime = null, Role = "User"
-                }
+                new User( 1L,"Standard 1",  "123456789", "test",  "test","User")
             );
         }
     }

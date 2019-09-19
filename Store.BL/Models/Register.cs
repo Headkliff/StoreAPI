@@ -1,9 +1,10 @@
 ﻿namespace Store.BL.Models
 {
-    public class UserView
+    public class Register
     {
         public string Nickname { get; set; }
         public string Password { get; set; }
-        public string Role { get; set; }
+        public string FirstName { get; set; }
+        public string SecondName { get; set; }
     }
 }

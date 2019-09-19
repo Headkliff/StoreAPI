@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store.Entity.Db;
 
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20190919193637_Login")]
+    partial class Login
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,10 +49,10 @@ namespace Store.Entity.Migrations
                         new
                         {
                             Id = 1L,
-                            CreateDateTime = new DateTime(2019, 9, 19, 23, 2, 4, 271, DateTimeKind.Local).AddTicks(8156),
+                            CreateDateTime = new DateTime(2019, 9, 19, 22, 36, 37, 31, DateTimeKind.Local).AddTicks(9102),
                             FirstName = "test",
                             Nickname = "Standard 1",
-                            Password = "123456789",
+                            Password = "111",
                             Role = "User",
                             SecondName = "test"
                         });

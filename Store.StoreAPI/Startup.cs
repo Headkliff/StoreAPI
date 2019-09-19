@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Store.BL.Auth;
 using Store.BL.Extensions;
 using Store.BL.Services;
 using Store.Entity.Db;
@@ -32,8 +31,12 @@ namespace Store.StoreAPI
 
             services.AddScoped<IUserService, UserService>();
 
+            //services.AddDbContext<ApplicationContext>(opt =>
+            //    opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+            //        x => x.MigrationsAssembly("Store.Entity")));
+
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                opt.UseSqlServer(Configuration.GetConnectionString("Home"),
                     x => x.MigrationsAssembly("Store.Entity")));
 
             services.AddAutoMapper();

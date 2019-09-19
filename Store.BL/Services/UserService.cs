@@ -31,7 +31,7 @@ namespace Store.BL.Services
             return _mapper.Map<UserView>(user);
         }
 
-        public async Task<UserView> GetUserRegAsync(string nickname, string password)
+        public async Task<UserView> GetUserAuthAsync(string nickname, string password)
         {
             var user = await _repository.GetByParamAsync(x => x.Nickname.Equals(nickname) && x.Password.Equals(password));
             return _mapper.Map<UserView>(user);

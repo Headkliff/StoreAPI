@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Store.BL.Models
 {
-    public class RequestToken
+    public class Login
     {
         [Required]
         [MaxLength(256)]

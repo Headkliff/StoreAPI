@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Store.BL.Models;
+using Store.BL.Services;
 
 namespace Store.StoreAPI.Controllers
 {
@@ -14,54 +15,48 @@ namespace Store.StoreAPI.Controllers
     public class LoginController : ControllerBase
     {
         private readonly IConfiguration _config;
+        private readonly IUserService _userService;
 
-        public LoginController(IConfiguration config)
+        public LoginController(IConfiguration config, IUserService userService)
         {
             _config = config;
+            this._userService = userService;
         }
 
         [AllowAnonymous]
         [HttpPost]
-        public IActionResult Login(RequestToken login)
+        public IActionResult CreateToken(Login login)
         {
-            IActionResult responce = Unauthorized();
-            var user = AuthenticateUser(login);
+            IActionResult response = Unauthorized();
+            var user = Authenticate(login);
+
             if (user != null)
             {
-                var tokenString = GenerateJsonWebToken();
-                responce = Ok(new {token = tokenString});
+                var tokenString = BuildToken(user);
+                response = Ok(new { token = tokenString });
             }
 
-            return responce;
+            return response;
         }
 
-        private string GenerateJsonWebToken()
+        private string BuildToken(UserView user)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
-                null,
-                expires: DateTime.Now.AddMinutes(120),
-                signingCredentials: credentials);
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-
-        private RequestToken AuthenticateUser(RequestToken login)
+        private UserView Authenticate(Login login)
         {
-            RequestToken user = null;
+            UserView user = _userService.GetUserAuthAsync(login.Nickname,login.Password).Result;
 
-            //Validate the User Credentials  
-            //Demo Purpose, I have Passed HardCoded User Information
-            if (login.Nickname == "Standard 1")
-            {
-                user = new RequestToken() { Nickname = "Standard 1", Password = "111"};
-            }
             return user;
-
         }
     }
 }
