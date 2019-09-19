@@ -22,7 +22,7 @@ namespace Store.BL.Services
         public async Task<IEnumerable<UserView>> GetAllAsync()
         {
             var users = await _repository.GetAllAsync();
-            return _mapper.Map<List<UserView>>(users);
+            return _mapper.Map<IEnumerable<UserView>>(users);
         }
 
         public async Task<UserView> GetByIdAsync(long id)
