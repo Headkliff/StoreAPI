@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -37,29 +38,24 @@ namespace Store.StoreAPI
 
             services.AddAutoMapper();
 
+            services.AddCors(c =>
+            {
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin());
+            });
+
             //JWT
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.RequireHttpsMetadata = false;
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                       
                         ValidateIssuer = true,
-                        
-                        ValidIssuer = AuthOptions.ISSUER,
-
-                        
                         ValidateAudience = true,
-                        
-                        ValidAudience = AuthOptions.AUDIENCE,
-                        
                         ValidateLifetime = true,
-
-                        
-                        IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                       
                         ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
                     };
                 });
 
@@ -97,6 +93,8 @@ namespace Store.StoreAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store API V1");
             });
 
+            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();
         }
