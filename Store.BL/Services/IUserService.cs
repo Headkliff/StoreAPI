@@ -10,7 +10,7 @@ namespace Store.BL.Services
         Task<UserView> GetByIdAsync(long id);
         Task<UserView> GetUserAuthAsync(string nickname, string password);
 
-        Task AddAsync(UserView entity);
+        Task AddAsync(Register entity);
         Task DeleteAsync(UserView entity);
         Task UpdateAsync(UserView entity);
     }

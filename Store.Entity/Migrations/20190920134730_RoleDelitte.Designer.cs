@@ -10,8 +10,8 @@ using Store.Entity.Db;
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190919193637_Login")]
-    partial class Login
+    [Migration("20190920134730_RoleDelitte")]
+    partial class RoleDelitte
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,8 +35,6 @@ namespace Store.Entity.Migrations
 
                     b.Property<string>("Password");
 
-                    b.Property<string>("Role");
-
                     b.Property<string>("SecondName");
 
                     b.Property<DateTime?>("UpdateDateTime");
@@ -44,18 +42,6 @@ namespace Store.Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreateDateTime = new DateTime(2019, 9, 19, 22, 36, 37, 31, DateTimeKind.Local).AddTicks(9102),
-                            FirstName = "test",
-                            Nickname = "Standard 1",
-                            Password = "111",
-                            Role = "User",
-                            SecondName = "test"
-                        });
                 });
 #pragma warning restore 612, 618
         }

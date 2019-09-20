@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Store.Entity.Extensions;
 using Store.Entity.Models;
 
 namespace Store.Entity.Db
@@ -10,11 +12,10 @@ namespace Store.Entity.Db
 
         public DbSet<User> Users { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
         {
-            modelBuilder.Entity<User>().HasData(
-                new User( 1L,"Standard 1",  "123456789", "test",  "test","User")
-            );
+            ChangeTracker.SetDate();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
     }
 }

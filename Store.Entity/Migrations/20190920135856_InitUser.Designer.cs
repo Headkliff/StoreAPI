@@ -10,8 +10,8 @@ using Store.Entity.Db;
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190918084235_SeedData1.2")]
-    partial class SeedData12
+    [Migration("20190920135856_InitUser")]
+    partial class InitUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,17 +42,6 @@ namespace Store.Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreateDateTime = new DateTime(2019, 9, 18, 11, 42, 35, 262, DateTimeKind.Local).AddTicks(2086),
-                            FirstName = "test",
-                            Nickname = "Standard 1",
-                            Password = "111",
-                            SecondName = "test1"
-                        });
                 });
 #pragma warning restore 612, 618
         }

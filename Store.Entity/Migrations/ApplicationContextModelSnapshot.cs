@@ -33,8 +33,6 @@ namespace Store.Entity.Migrations
 
                     b.Property<string>("Password");
 
-                    b.Property<string>("Role");
-
                     b.Property<string>("SecondName");
 
                     b.Property<DateTime?>("UpdateDateTime");
@@ -42,18 +40,6 @@ namespace Store.Entity.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreateDateTime = new DateTime(2019, 9, 19, 23, 2, 4, 271, DateTimeKind.Local).AddTicks(8156),
-                            FirstName = "test",
-                            Nickname = "Standard 1",
-                            Password = "123456789",
-                            Role = "User",
-                            SecondName = "test"
-                        });
                 });
 #pragma warning restore 612, 618
         }

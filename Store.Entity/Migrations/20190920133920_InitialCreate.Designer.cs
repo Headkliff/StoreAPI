@@ -10,8 +10,8 @@ using Store.Entity.Db;
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20190918065844_TestData")]
-    partial class TestData
+    [Migration("20190920133920_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,11 @@ namespace Store.Entity.Migrations
 
                     b.Property<string>("Password");
 
+                    b.Property<string>("Role");
+
                     b.Property<string>("SecondName");
 
-                    b.Property<DateTime>("UpdateDateTime");
+                    b.Property<DateTime?>("UpdateDateTime");
 
                     b.HasKey("Id");
 

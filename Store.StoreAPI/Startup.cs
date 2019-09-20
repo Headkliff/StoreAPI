@@ -31,13 +31,13 @@ namespace Store.StoreAPI
 
             services.AddScoped<IUserService, UserService>();
 
-            //services.AddDbContext<ApplicationContext>(opt =>
-            //    opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-            //        x => x.MigrationsAssembly("Store.Entity")));
-
             services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("Home"),
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     x => x.MigrationsAssembly("Store.Entity")));
+
+            //services.AddDbContext<ApplicationContext>(opt =>
+            //    opt.UseSqlServer(Configuration.GetConnectionString("Home"),
+            //        x => x.MigrationsAssembly("Store.Entity")));
 
             services.AddAutoMapper();
 
@@ -96,7 +96,7 @@ namespace Store.StoreAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store API V1");
             });
 
-            app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseMvc();

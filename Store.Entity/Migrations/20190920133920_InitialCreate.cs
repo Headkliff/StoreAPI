@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Store.Entity.Migrations
 {
-    public partial class Init : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,14 +12,15 @@ namespace Store.Entity.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<long>()
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    CreateDateTime = table.Column<DateTime>(nullable: false),
+                    CreateDateTime = table.Column<DateTime>(),
                     UpdateDateTime = table.Column<DateTime>(nullable: true),
                     Nickname = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
-                    SecondName = table.Column<string>(nullable: true)
+                    SecondName = table.Column<string>(nullable: true),
+                    Role = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

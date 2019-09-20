@@ -19,10 +19,9 @@ namespace Store.StoreAPI.Controllers
 
         // GET: api/User
         [HttpGet]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTask()
         {
-            var currentUser = HttpContext.User;
             return Ok(await _userService.GetAllAsync());
         }
 

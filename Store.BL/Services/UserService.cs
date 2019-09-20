@@ -33,13 +33,24 @@ namespace Store.BL.Services
 
         public async Task<UserView> GetUserAuthAsync(string nickname, string password)
         {
-            var user = await _repository.GetByParamAsync(x => x.Nickname.Equals(nickname) && x.Password.Equals(password));
+            var user = await _repository.GetByParamAsync(
+                x => x.Nickname.Equals(nickname) && x.Password.Equals(password));
             return _mapper.Map<UserView>(user);
         }
 
-        public Task AddAsync(UserView entity)
+        public async Task AddAsync(Register entity)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByParamAsync(x => x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase));
+            if (user != null)
+            {
+                throw new Exception("this user already exist");
+            }
+            User newUser = new User
+            {
+                Nickname = entity.Nickname, Password = entity.Password, FirstName = entity.FirstName,
+                SecondName = entity.SecondName
+            };
+            await _repository.AddAsync(newUser);
         }
 
         public Task DeleteAsync(UserView entity)
