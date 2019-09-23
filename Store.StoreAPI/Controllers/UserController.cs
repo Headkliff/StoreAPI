@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.BL.Services;
 using Store.Entity.Models;
@@ -17,21 +21,12 @@ namespace Store.StoreAPI.Controllers
             _userService = userService;
         }
 
-        // GET: api/User
+        // GET: api/User/5
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<User>>> GetUserTask()
+        public async Task<ActionResult<User>> GetUserTask()
         {
-            return Ok(await _userService.GetAllAsync(null));
-        }
-
-        // GET: api/User/5
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<User>> GetUserTask(long id)
-        {
-            var user = await _userService.GetByIdAsync(id);
-
+            var user = await _userService.GetByIdAsync();
             if (user == null)
             {
                 return NotFound();

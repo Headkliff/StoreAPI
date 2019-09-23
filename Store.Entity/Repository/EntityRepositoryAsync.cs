@@ -21,7 +21,7 @@ namespace Store.Entity.Repository
 
         }
 
-        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression)
+        public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> expression)
         {
             return await _dbSet.Where(expression).ToListAsync();
         }

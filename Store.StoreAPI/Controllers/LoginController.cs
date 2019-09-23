@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.BL.Models;
@@ -21,14 +22,15 @@ namespace Store.StoreAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(Login login)
         {
-            var user =await _userService.AuthenticateAsync(login);
-
-            if (user != null)
+            try
             {
-                return Ok(new { token = await _userService.BuildToken(user)});
+                var token = await _userService.AuthenticateAsync(login);
+                return Ok(token);
             }
-
-            return Unauthorized();
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
         }
     }
 }

@@ -24,12 +24,12 @@ namespace Store.StoreAPI.Controllers
         {
             try
             {
-                var user = await _userService.RegisterAsync(userRegister);
-                return Ok(await _userService.BuildToken(user));
+                var token = await _userService.RegisterAsync(userRegister);
+                return Ok(token);
             }
             catch (Exception e)
             {
-                return Ok(e);
+                return Ok(e.Message);
             }
         }
     }

@@ -9,8 +9,8 @@ namespace Store.Entity.Migrations
         {
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Nickname", "Password", "FirstName", "SecondName", "CreateDateTime" },
-                values: new object[] { "Test", "123456789", "tester", "testov", DateTime.UtcNow });
+                columns: new[] { "Nickname", "Password", "FirstName", "SecondName", "CreateDateTime", "Email" },
+                values: new object[] { "Test", "123456789", "tester", "testov", DateTime.UtcNow, "niki@mail.com" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
