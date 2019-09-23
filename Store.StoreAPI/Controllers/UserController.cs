@@ -22,7 +22,7 @@ namespace Store.StoreAPI.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUserTask()
         {
-            return Ok(await _userService.GetAllAsync());
+            return Ok(await _userService.GetAllAsync(null));
         }
 
         // GET: api/User/5
@@ -30,7 +30,6 @@ namespace Store.StoreAPI.Controllers
         [Authorize]
         public async Task<ActionResult<User>> GetUserTask(long id)
         {
-            var currentUser = HttpContext.User;
             var user = await _userService.GetByIdAsync(id);
 
             if (user == null)

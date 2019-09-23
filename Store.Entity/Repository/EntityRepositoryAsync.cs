@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -20,19 +21,14 @@ namespace Store.Entity.Repository
 
         }
 
-        public async Task<IQueryable<T>> GetAllAsync()
+        public async Task<List<T>> GetAllAsync(Expression<Func<T, bool>> expression)
         {
-            return await Task.Run(() => _dbSet.AsQueryable());
+            return await _dbSet.Where(expression).ToListAsync();
         }
 
         public async Task<T> GetByIdAsync(long id)
         {
             return await _dbSet.FindAsync(id);
-        }
-
-        public async Task<T> GetByParamAsync(Expression<Func<T, bool>> expression)
-        {
-            return await _dbSet.Where(expression).FirstOrDefaultAsync();
         }
 
         public async Task AddAsync(T entity)
