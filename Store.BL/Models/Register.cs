@@ -1,4 +1,6 @@
-﻿namespace Store.BL.Models
+﻿using System.Net.Mail;
+
+namespace Store.BL.Models
 {
     public class Register
     {

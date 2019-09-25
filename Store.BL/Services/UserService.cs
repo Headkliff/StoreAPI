@@ -46,9 +46,9 @@ namespace Store.BL.Services
 
         public async Task AddAsync(Register entity)
         {
-            var user = await _repository.GetAllAsync(x =>
-                x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase));
-            if (user.Count != 0)
+            var user = (await _repository.GetAllAsync(x =>
+                x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            if (user != null)
             {
                 throw new Exception("this userView already exist");
             }

@@ -18,12 +18,13 @@ namespace Store.Entity.Repository
         {
             _context = context;
             _dbSet = _context.Set<T>();
-
         }
 
-        public async Task<IList<T>> GetAllAsync(Expression<Func<T, bool>> expression)
+        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression)
         {
-            return await _dbSet.Where(expression).ToListAsync();
+            if (expression != null)
+                return await Task.Run(()=>_dbSet.Where(expression).AsQueryable());
+            return await Task.Run(() => _dbSet.AsQueryable());
         }
 
         public async Task<T> GetByIdAsync(long id)

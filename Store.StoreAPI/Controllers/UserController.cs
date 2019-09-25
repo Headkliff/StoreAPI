@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Store.BL.Services;
 using Store.Entity.Models;
-
 namespace Store.StoreAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -21,7 +15,7 @@ namespace Store.StoreAPI.Controllers
             _userService = userService;
         }
 
-        // GET: api/User/5
+
         [HttpGet]
         [Authorize]
         public async Task<ActionResult<User>> GetUserTask()

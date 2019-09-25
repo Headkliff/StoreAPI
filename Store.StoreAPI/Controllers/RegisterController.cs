@@ -29,7 +29,7 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                return Ok(e.Message);
+                return BadRequest(e.Message);
             }
         }
     }

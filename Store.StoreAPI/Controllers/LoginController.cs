@@ -15,7 +15,7 @@ namespace Store.StoreAPI.Controllers
 
         public LoginController(IUserService userService)
         {
-            this._userService = userService;
+            _userService = userService;
         }
 
         [AllowAnonymous]

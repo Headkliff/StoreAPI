@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 
 namespace Store.Entity.Models
 {

@@ -32,7 +32,7 @@ namespace Store.StoreAPI
 
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
 
 
             services.AddDbContext<ApplicationContext>(opt =>
