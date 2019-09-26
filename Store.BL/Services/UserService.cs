@@ -89,7 +89,7 @@ namespace Store.BL.Services
 
         public async Task<string> AuthenticateAsync(Login login)
         {
-            var users = await GetAllAsync(x => x.Nickname.Equals(login.Nickname) && x.Password.Equals(login.Password));
+            var users = await GetAllAsync(x => x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase) && x.Password.Equals(login.Password));
 
             return BuildToken(users.FirstOrDefault());
         }
@@ -98,7 +98,7 @@ namespace Store.BL.Services
         {
             await AddAsync(userRegister);
             var users = await GetAllAsync(x =>
-                x.Nickname.Equals(userRegister.Nickname) && x.Password.Equals(userRegister.Password));
+                x.Nickname.Equals(userRegister.Nickname, StringComparison.OrdinalIgnoreCase) && x.Password.Equals(userRegister.Password));
             return BuildToken(users.FirstOrDefault());
         }
 
