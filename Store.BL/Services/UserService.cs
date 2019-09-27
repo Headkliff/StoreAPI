@@ -66,9 +66,19 @@ namespace Store.BL.Services
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(UserView entity)
+        public async Task<string> UpdateAsync(Register entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _repository.UpdateAsync(_mapper.Map<User>(entity));
+                
+            }
+            catch (Exception)
+            {
+                throw new Exception("this Nickname already exist");
+            }
+
+            return BuildToken((await GetAllAsync(x => x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase))).FirstOrDefault());
         }
 
         private string BuildToken(UserView user)

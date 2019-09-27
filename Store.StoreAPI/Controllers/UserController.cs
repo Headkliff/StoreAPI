@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Store.BL.Models;
 using Store.BL.Services;
 using Store.Entity.Models;
 namespace Store.StoreAPI.Controllers
@@ -27,6 +28,14 @@ namespace Store.StoreAPI.Controllers
 
             }
 
+            return Ok(user);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<User>> EditUserTask(Register newUserData)
+        {
+            var user = await _userService.UpdateAsync(newUserData);
             return Ok(user);
         }
     }
