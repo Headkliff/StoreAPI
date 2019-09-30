@@ -19,7 +19,7 @@ namespace Store.StoreAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<User>> GetUserTask()
+        public async Task<ActionResult<UserView>> GetUserTask()
         {
             var user = await _userService.GetByIdAsync();
             if (user == null)
@@ -31,9 +31,9 @@ namespace Store.StoreAPI.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPost("edit")]
         [Authorize]
-        public async Task<ActionResult<User>> EditUserTask(Register newUserData)
+        public async Task<ActionResult<UserView>> EditUserTask(Register newUserData)
         {
             var user = await _userService.UpdateAsync(newUserData);
             return Ok(user);
