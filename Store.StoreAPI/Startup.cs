@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -42,6 +41,7 @@ namespace Store.StoreAPI
             //services.AddDbContext<ApplicationContext>(opt =>
             //    opt.UseSqlServer(Configuration.GetConnectionString("Home"),
             //        x => x.MigrationsAssembly("Store.Entity")));
+
 
             services.AddAutoMapper();
 

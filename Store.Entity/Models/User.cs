@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Net.Mail;
 
 namespace Store.Entity.Models
 {
@@ -7,13 +6,13 @@ namespace Store.Entity.Models
     {
         [MaxLength(16), MinLength(4),Required]
         public string Nickname { get; set; }
-        [MaxLength(16), MinLength(8), Required]
+        [Required]
         public string Password { get; set; }
         [Required]
         public string Email { get; set; }
-        [MaxLength(25)]
+        [MaxLength(25), Required]
         public string FirstName { get; set; }
-        [MaxLength(25)]
+        [MaxLength(25), Required]
         public string SecondName { get; set; }
     }
 }

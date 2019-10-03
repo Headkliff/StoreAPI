@@ -23,7 +23,8 @@ namespace Store.BL.Services
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _context;
 
-        public UserService(IRepositoryAsync<User> repository, IMapper mapper, IConfiguration configuration, IHttpContextAccessor context)
+        public UserService(IRepositoryAsync<User> repository, IMapper mapper, IConfiguration configuration,
+            IHttpContextAccessor context)
         {
             _repository = repository;
             _mapper = mapper;
@@ -55,7 +56,8 @@ namespace Store.BL.Services
 
             User newUser = new User
             {
-                Nickname = entity.Nickname, Password = entity.Password, FirstName = entity.FirstName,
+                Nickname = entity.Nickname, Password = BCrypt.Net.BCrypt.HashPassword(entity.Password),
+                FirstName = entity.FirstName,
                 SecondName = entity.SecondName, Email = entity.Email
             };
             await _repository.AddAsync(newUser);
@@ -71,14 +73,15 @@ namespace Store.BL.Services
             try
             {
                 await _repository.UpdateAsync(_mapper.Map<User>(entity));
-                
             }
             catch (Exception)
             {
                 throw new Exception("this Nickname already exist");
             }
 
-            return BuildToken((await GetAllAsync(x => x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase))).FirstOrDefault());
+            return BuildToken(
+                (await GetAllAsync(x => x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase)))
+                .FirstOrDefault());
         }
 
         private string BuildToken(UserView user)
@@ -99,16 +102,31 @@ namespace Store.BL.Services
 
         public async Task<string> AuthenticateAsync(Login login)
         {
-            var users = await GetAllAsync(x => x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase) && x.Password.Equals(login.Password));
+            var token = "";
+            var users = await _repository.GetAllAsync(x => x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase));
+            try
+            {
+                var correct =
+                    BCrypt.Net.BCrypt.Verify(login.Password, users.FirstOrDefault()?.Password);
+                if (correct)
+                {
+                     token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Invalid data");
+            }
 
-            return BuildToken(users.FirstOrDefault());
+            return token;
         }
 
         public async Task<string> RegisterAsync(Register userRegister)
         {
+
             await AddAsync(userRegister);
             var users = await GetAllAsync(x =>
-                x.Nickname.Equals(userRegister.Nickname, StringComparison.OrdinalIgnoreCase) && x.Password.Equals(userRegister.Password));
+                x.Nickname.Equals(userRegister.Nickname, StringComparison.OrdinalIgnoreCase));
             return BuildToken(users.FirstOrDefault());
         }
 

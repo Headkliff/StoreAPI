@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.BL.Models;
 using Store.BL.Services;
-using Store.Entity.Models;
+
 namespace Store.StoreAPI.Controllers
 {
     [Route("api/[controller]")]
