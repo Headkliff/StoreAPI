@@ -7,7 +7,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Store.BL.Models;
@@ -18,18 +17,16 @@ namespace Store.BL.Services
 {
     public class UserService : IUserService
     {
-        private readonly IRepositoryAsync<User> _repository;
+        private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly IHttpContextAccessor _context;
+        
 
-        public UserService(IRepositoryAsync<User> repository, IMapper mapper, IConfiguration configuration,
-            IHttpContextAccessor context)
+        public UserService(IRepository<User> repository, IMapper mapper, IConfiguration configuration)
         {
             _repository = repository;
             _mapper = mapper;
             _configuration = configuration;
-            _context = context;
         }
 
         public async Task<IList<UserView>> GetAllAsync(Expression<Func<User, bool>> expression)
@@ -38,10 +35,9 @@ namespace Store.BL.Services
             return _mapper.Map<IList<UserView>>(users);
         }
 
-        public async Task<UserView> GetByIdAsync()
+        public async Task<UserView> GetByIdAsync(long id)
         {
-            var userId = _context.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var user = await _repository.GetByIdAsync(Convert.ToInt64(userId));
+            var user = await _repository.GetByIdAsync(id);
             return _mapper.Map<UserView>(user);
         }
 
@@ -54,7 +50,7 @@ namespace Store.BL.Services
                 throw new Exception("this userView already exist");
             }
 
-            User newUser = new User
+            var newUser = new User
             {
                 Nickname = entity.Nickname, Password = BCrypt.Net.BCrypt.HashPassword(entity.Password),
                 FirstName = entity.FirstName,
@@ -68,15 +64,15 @@ namespace Store.BL.Services
             throw new NotImplementedException();
         }
 
-        public async Task<string> UpdateAsync(Register entity)
+        public async Task<string> UpdateAsync(User entity)
         {
             try
             {
-                await _repository.UpdateAsync(_mapper.Map<User>(entity));
+                await _repository.UpdateAsync(entity);
             }
             catch (Exception)
             {
-                throw new Exception("this Nickname already exist");
+                throw new Exception("Something went wrong");
             }
 
             return BuildToken(
@@ -113,7 +109,7 @@ namespace Store.BL.Services
                      token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("Invalid data");
             }
@@ -135,12 +131,31 @@ namespace Store.BL.Services
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userView.Nickname),
-                new Claim(ClaimTypes.NameIdentifier, userView.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, userView.Id.ToString()),
+                new Claim(ClaimTypes.Name, userView.Nickname)
             };
             ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
                     ClaimsIdentity.DefaultRoleClaimType);
             return claimsIdentity;
+        }
+
+        public async Task<string> EditUserInfoAsync(UserEdit userEdit, string userNick)
+        {
+            var user = (await _repository.GetAllAsync(x =>
+                x.Nickname.Equals(userNick, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            if (user != null)
+            {
+                user.Email = userEdit.Email;
+                user.FirstName = userEdit.FirstName;
+                user.SecondName = userEdit.SecondName;
+
+                return await UpdateAsync(user);
+            }
+            else
+            {
+                throw new Exception("This user don't' exist");
+            }
         }
     }
 }

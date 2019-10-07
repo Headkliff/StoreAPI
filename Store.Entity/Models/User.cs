@@ -8,7 +8,7 @@ namespace Store.Entity.Models
         public string Nickname { get; set; }
         [Required]
         public string Password { get; set; }
-        [Required]
+        [Required, EmailAddress]
         public string Email { get; set; }
         [MaxLength(25), Required]
         public string FirstName { get; set; }

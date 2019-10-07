@@ -10,12 +10,13 @@ namespace Store.BL.Services
     public interface IUserService
     {
         Task<IList<UserView>> GetAllAsync(Expression<Func<User, bool>> expression);
-        Task<UserView> GetByIdAsync();
+        Task<UserView> GetByIdAsync(long toInt64);
 
         Task AddAsync(Register entity);
         Task DeleteAsync(UserView entity);
-        Task<string> UpdateAsync(Register entity);
+        Task<string> UpdateAsync(User entity);
         Task<string> AuthenticateAsync(Login login);
         Task<string> RegisterAsync(Register userRegister);
+        Task<string> EditUserInfoAsync(UserEdit userEdit, string userNick);
     }
 }

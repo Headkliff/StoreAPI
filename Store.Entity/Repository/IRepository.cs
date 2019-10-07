@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Store.Entity.Repository
 {
-    public interface IRepositoryAsync<T> where T: Models.EntityBase
+    public interface IRepository<T> where T: Models.EntityBase
     {
         Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression);
         Task<T> GetByIdAsync(long id);

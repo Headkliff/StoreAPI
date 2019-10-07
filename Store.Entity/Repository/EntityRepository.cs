@@ -9,12 +9,12 @@ using Store.Entity.Models;
 
 namespace Store.Entity.Repository
 {
-    public class EntityRepositoryAsync<T> : IRepositoryAsync<T> where T : EntityBase
+    public class EntityRepository<T> : IRepository<T> where T : EntityBase
     {
         private readonly ApplicationContext _context;
         private readonly DbSet<T> _dbSet;
 
-        public EntityRepositoryAsync(ApplicationContext context)
+        public EntityRepository(ApplicationContext context)
         {
             _context = context;
             _dbSet = _context.Set<T>();
@@ -22,9 +22,7 @@ namespace Store.Entity.Repository
 
         public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression)
         {
-            if (expression != null)
-                return await Task.Run(()=>_dbSet.Where(expression).AsQueryable());
-            return await Task.Run(() => _dbSet.AsQueryable());
+            return await Task.Run(() => (expression != null ? _dbSet.Where(expression) : _dbSet).AsQueryable());
         }
 
         public async Task<T> GetByIdAsync(long id)

@@ -27,7 +27,7 @@ namespace Store.StoreAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped(typeof(IRepositoryAsync<>), typeof(EntityRepositoryAsync<>));
+            services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<>));
 
             services.AddScoped<IUserService, UserService>();
 

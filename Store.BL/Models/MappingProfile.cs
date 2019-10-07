@@ -8,7 +8,7 @@ namespace Store.BL.Models
         public MappingProfile()
         {
             CreateMap<User, UserView>();
-            CreateMap<UserView,Login>();
+            CreateMap<UserView, Login>();
             CreateMap<User, Register>();
         }
     }

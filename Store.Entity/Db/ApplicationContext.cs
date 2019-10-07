@@ -1,7 +1,7 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Store.Entity.Extensions;
 using Store.Entity.Models;
 
 namespace Store.Entity.Db
@@ -14,7 +14,23 @@ namespace Store.Entity.Db
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
         {
-            ChangeTracker.SetDate();
+            foreach (var entry in ChangeTracker.Entries())
+            {
+                if (entry.Entity is EntityBase baseEntry)
+                {
+                    var dateTime = DateTime.UtcNow;
+
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            baseEntry.CreateDateTime = dateTime;
+                            break;
+                        case EntityState.Modified:
+                            baseEntry.UpdateDateTime = dateTime;
+                            break;
+                    }
+                }
+            }
             return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
         }
     }
