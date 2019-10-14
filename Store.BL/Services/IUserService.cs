@@ -13,10 +13,11 @@ namespace Store.BL.Services
         Task<UserView> GetByIdAsync(long toInt64);
 
         Task AddAsync(Register entity);
-        Task DeleteAsync(UserView entity);
+        Task DeleteAsync(long id);
         Task<string> UpdateAsync(User entity);
         Task<string> AuthenticateAsync(Login login);
         Task<string> RegisterAsync(Register userRegister);
         Task<string> EditUserInfoAsync(UserEdit userEdit, string userNick);
+        Task<string> ChangePassAsync(string password, string newPassword, string userNick);
     }
 }

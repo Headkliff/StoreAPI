@@ -34,7 +34,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("/registration")]
+        [HttpPost("registration")]
         public async Task<IActionResult> CreateToken(Register userRegister)
         {
             try

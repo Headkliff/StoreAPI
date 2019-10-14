@@ -11,6 +11,7 @@ namespace Store.Entity.Db
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options){}
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Item> Items { get; set; }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
         {

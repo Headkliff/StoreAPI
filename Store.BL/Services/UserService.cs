@@ -52,16 +52,20 @@ namespace Store.BL.Services
 
             var newUser = new User
             {
-                Nickname = entity.Nickname, Password = BCrypt.Net.BCrypt.HashPassword(entity.Password),
-                FirstName = entity.FirstName,
-                SecondName = entity.SecondName, Email = entity.Email
+                Nickname = entity.Nickname.Trim(), Password = BCrypt.Net.BCrypt.HashPassword(entity.Password),
+                FirstName = entity.FirstName.Trim(),
+                SecondName = entity.SecondName.Trim(), Email = entity.Email.Trim()
             };
             await _repository.AddAsync(newUser);
         }
 
-        public Task DeleteAsync(UserView entity)
+        public async Task DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetByIdAsync(id);
+            if (user != null)
+            {
+                await _repository.DeleteAsync(entity: user);
+            }
         }
 
         public async Task<string> UpdateAsync(User entity)
@@ -100,21 +104,24 @@ namespace Store.BL.Services
         {
             var token = "";
             var users = await _repository.GetAllAsync(x => x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase));
-            try
+            if (users !=null)
             {
-                var correct =
-                    BCrypt.Net.BCrypt.Verify(login.Password, users.FirstOrDefault()?.Password);
+                var correct =BCrypt.Net.BCrypt.Verify(login.Password, users.FirstOrDefault()?.Password);
                 if (correct)
                 {
-                     token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
+                    token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
+                    return token;
+
+                }
+                else
+                {
+                    throw new Exception("This data invalid");
                 }
             }
-            catch (Exception)
+            else
             {
-                throw new Exception("Invalid data");
+                throw new Exception("This user doesn't' exist");
             }
-
-            return token;
         }
 
         public async Task<string> RegisterAsync(Register userRegister)
@@ -122,7 +129,7 @@ namespace Store.BL.Services
 
             await AddAsync(userRegister);
             var users = await GetAllAsync(x =>
-                x.Nickname.Equals(userRegister.Nickname, StringComparison.OrdinalIgnoreCase));
+                x.Nickname.Equals(userRegister.Nickname.Trim(), StringComparison.OrdinalIgnoreCase));
             return BuildToken(users.FirstOrDefault());
         }
 
@@ -143,18 +150,33 @@ namespace Store.BL.Services
         public async Task<string> EditUserInfoAsync(UserEdit userEdit, string userNick)
         {
             var user = (await _repository.GetAllAsync(x =>
-                x.Nickname.Equals(userNick, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+                x.Nickname.Equals(userNick.Trim(), StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (user != null)
             {
-                user.Email = userEdit.Email;
-                user.FirstName = userEdit.FirstName;
-                user.SecondName = userEdit.SecondName;
+                user.Email = userEdit.Email.Trim();
+                user.FirstName = userEdit.FirstName.Trim();
+                user.SecondName = userEdit.SecondName.Trim();
 
                 return await UpdateAsync(user);
             }
             else
             {
                 throw new Exception("This user don't' exist");
+            }
+        }
+
+        public async Task<string> ChangePassAsync(string password , string newPassword, string userNick)
+        {
+            var user = (await _repository.GetAllAsync(x =>
+                x.Nickname.Equals(userNick.Trim(), StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            if (user!=null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            {
+                user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+                return await UpdateAsync(user);
+            }
+            else
+            {
+                throw new Exception("Invalid password");
             }
         }
     }
