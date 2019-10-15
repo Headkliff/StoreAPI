@@ -14,6 +14,7 @@ namespace Store.BL.Services
 
         Task AddAsync(Register entity);
         Task DeleteAsync(long id);
+        Task SoftDeleteAsync(long id);
         Task<string> UpdateAsync(User entity);
         Task<string> AuthenticateAsync(Login login);
         Task<string> RegisterAsync(Register userRegister);

@@ -13,6 +13,15 @@ namespace Store.Entity.Db
         public DbSet<User> Users { get; set; }
         public DbSet<Item> Items { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<User>()
+                .HasIndex(u => u.Nickname)
+                .IsUnique();
+            builder.Entity<User>()
+                .HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
+        }
+
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries())
@@ -25,6 +34,7 @@ namespace Store.Entity.Db
                     {
                         case EntityState.Added:
                             baseEntry.CreateDateTime = dateTime;
+                            entry.CurrentValues["IsDeleted"] = false;
                             break;
                         case EntityState.Modified:
                             baseEntry.UpdateDateTime = dateTime;

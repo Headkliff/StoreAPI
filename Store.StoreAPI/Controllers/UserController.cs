@@ -32,11 +32,27 @@ namespace Store.StoreAPI.Controllers
 
         [HttpDelete("delete")]
         [Authorize]
-        public async Task<ActionResult<UserView>> DeleteUser([FromBody]long id)
+        public async Task<ActionResult<UserView>> DeleteUser([FromBody]UserView user)
         {
             try
             {
-                await _userService.DeleteAsync(id);
+                await _userService.DeleteAsync(user.Id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpDelete("softdelete")]
+        [Authorize]
+        public async Task<ActionResult<UserView>> SoftDeleteUser([FromBody]UserView user)
+        {
+            try
+            {
+                await _userService.SoftDeleteAsync(user.Id);
                 return Ok();
             }
             catch (Exception e)

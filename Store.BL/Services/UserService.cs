@@ -68,6 +68,16 @@ namespace Store.BL.Services
             }
         }
 
+        public async Task SoftDeleteAsync(long id)
+        {
+            var user = await _repository.GetByIdAsync(id);
+            if (user != null)
+            {
+                user.IsDeleted = true;
+                await _repository.UpdateAsync(entity: user);
+            }
+        }
+
         public async Task<string> UpdateAsync(User entity)
         {
             try
@@ -102,16 +112,14 @@ namespace Store.BL.Services
 
         public async Task<string> AuthenticateAsync(Login login)
         {
-            var token = "";
             var users = await _repository.GetAllAsync(x => x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase));
             if (users !=null)
             {
                 var correct =BCrypt.Net.BCrypt.Verify(login.Password, users.FirstOrDefault()?.Password);
                 if (correct)
                 {
-                    token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
+                    var token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
                     return token;
-
                 }
                 else
                 {
