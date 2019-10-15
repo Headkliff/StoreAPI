@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Store.BL.Exceptions;
 using Store.BL.Models;
 using Store.Entity.Models;
 using Store.Entity.Repository;
@@ -20,7 +22,7 @@ namespace Store.BL.Services
         private readonly IRepository<User> _repository;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        
+
 
         public UserService(IRepository<User> repository, IMapper mapper, IConfiguration configuration)
         {
@@ -47,7 +49,7 @@ namespace Store.BL.Services
                 x.Nickname.Equals(entity.Nickname, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (user != null)
             {
-                throw new Exception("this userView already exist");
+                throw new UserExistException("This User already exist");
             }
 
             var newUser = new User
@@ -68,12 +70,22 @@ namespace Store.BL.Services
             }
         }
 
-        public async Task SoftDeleteAsync(long id)
+        public async Task BlockAsync(long id)
         {
             var user = await _repository.GetByIdAsync(id);
             if (user != null)
             {
                 user.IsDeleted = true;
+                await _repository.UpdateAsync(entity: user);
+            }
+        }
+
+        public async Task UnlockAsync(long id)
+        {
+            var user = await _repository.GetByIdAsync(id);
+            if (user != null)
+            {
+                user.IsDeleted = false;
                 await _repository.UpdateAsync(entity: user);
             }
         }
@@ -112,29 +124,34 @@ namespace Store.BL.Services
 
         public async Task<string> AuthenticateAsync(Login login)
         {
-            var users = await _repository.GetAllAsync(x => x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase));
-            if (users !=null)
+            var user = (await _repository.GetAllAsync(x =>
+                x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            if (user != null)
             {
-                var correct =BCrypt.Net.BCrypt.Verify(login.Password, users.FirstOrDefault()?.Password);
+                var correct = BCrypt.Net.BCrypt.Verify(login.Password, user.Password);
                 if (correct)
                 {
-                    var token = BuildToken(_mapper.Map<UserView>(users.FirstOrDefault()));
+                    if (user.IsDeleted)
+                    {
+                        throw new BlockedUserException("Are you banned. Talk with Administrator!");
+                    }
+
+                    var token = BuildToken(_mapper.Map<UserView>(user));
                     return token;
                 }
                 else
                 {
-                    throw new Exception("This data invalid");
+                    throw new InvalidDataException("This data invalid");
                 }
             }
             else
             {
-                throw new Exception("This user doesn't' exist");
+                throw new UserDoesNotExistException("This user doesn't' exist");
             }
         }
 
         public async Task<string> RegisterAsync(Register userRegister)
         {
-
             await AddAsync(userRegister);
             var users = await GetAllAsync(x =>
                 x.Nickname.Equals(userRegister.Nickname.Trim(), StringComparison.OrdinalIgnoreCase));
@@ -169,22 +186,22 @@ namespace Store.BL.Services
             }
             else
             {
-                throw new Exception("This user don't' exist");
+                throw new UserDoesNotExistException("This user doesn't' exist");
             }
         }
 
-        public async Task<string> ChangePassAsync(string password , string newPassword, string userNick)
+        public async Task<string> ChangePassAsync(string password, string newPassword, string userNick)
         {
             var user = (await _repository.GetAllAsync(x =>
                 x.Nickname.Equals(userNick.Trim(), StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
-            if (user!=null && BCrypt.Net.BCrypt.Verify(password, user.Password))
+            if (user != null && BCrypt.Net.BCrypt.Verify(password, user.Password))
             {
                 user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
                 return await UpdateAsync(user);
             }
             else
             {
-                throw new Exception("Invalid password");
+                throw new InvalidDataException("Invalid password");
             }
         }
     }

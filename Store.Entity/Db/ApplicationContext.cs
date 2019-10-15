@@ -18,8 +18,6 @@ namespace Store.Entity.Db
             builder.Entity<User>()
                 .HasIndex(u => u.Nickname)
                 .IsUnique();
-            builder.Entity<User>()
-                .HasQueryFilter(user => EF.Property<bool>(user, "IsDeleted") == false);
         }
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())

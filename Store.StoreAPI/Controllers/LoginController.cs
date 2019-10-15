@@ -1,7 +1,9 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Store.BL.Exceptions;
 using Store.BL.Models;
 using Store.BL.Services;
 
@@ -27,9 +29,17 @@ namespace Store.StoreAPI.Controllers
                 var token = await _userService.AuthenticateAsync(login);
                 return Ok(token);
             }
-            catch (Exception e)
+            catch (BlockedUserException e)
             {
-                return BadRequest(e.Message);
+                return Unauthorized(new {e.Message});
+            }
+            catch (UserDoesNotExistException e)
+            {
+                return Unauthorized(new {e.Message});
+            }
+            catch (InvalidDataException e)
+            {
+                return Unauthorized(new {e.Message});
             }
         }
 
@@ -42,9 +52,9 @@ namespace Store.StoreAPI.Controllers
                 var token = await _userService.RegisterAsync(userRegister);
                 return Ok(token);
             }
-            catch (Exception e)
+            catch (UserExistException e)
             {
-                return BadRequest(e.Message);
+                return BadRequest(new {e.Message});
             }
         }
     }

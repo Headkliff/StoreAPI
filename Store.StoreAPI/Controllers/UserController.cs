@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Store.BL.Exceptions;
 using Store.BL.Models;
 using Store.BL.Services;
 
@@ -46,13 +48,29 @@ namespace Store.StoreAPI.Controllers
             }
         }
 
-        [HttpDelete("softdelete")]
+        [HttpDelete("softDelete")]
         [Authorize]
-        public async Task<ActionResult<UserView>> SoftDeleteUser([FromBody]UserView user)
+        public async Task<ActionResult<UserView>> BlockUser([FromBody]UserView user)
         {
             try
             {
-                await _userService.SoftDeleteAsync(user.Id);
+                await _userService.BlockAsync(user.Id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpDelete("unlock")]
+        [Authorize]
+        public async Task<ActionResult<UserView>> UnlockUser([FromBody]UserView user)
+        {
+            try
+            {
+                await _userService.UnlockAsync(user.Id);
                 return Ok();
             }
             catch (Exception e)
@@ -84,30 +102,34 @@ namespace Store.StoreAPI.Controllers
             var userNick = _context.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
             try
             {
-                var user = await _userService.EditUserInfoAsync(newUserData,userNick);
+                var user = await _userService.EditUserInfoAsync(newUserData, userNick);
                 return Ok(user);
+            }
+            catch (UserDoesNotExistException e)
+            {
+                return BadRequest(new {e.Message});
             }
             catch (Exception e)
             {
-                return BadRequest(e);
+                return Conflict(new {e.Message});
             }
         }
 
         [Authorize]
         [HttpPost("changePass")]
-        public async Task<ActionResult<UserView>> ChangePasswordTask([FromBody] string password, string newPassword)
+        public async Task<ActionResult<UserView>> ChangePasswordTask([FromBody] Passwords passwords)
         {
-            if (password != newPassword)
+            if (passwords.Password != passwords.NewPassword)
             {
                 var userNick = _context.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
                 try
                 {
-                    var user = await _userService.ChangePassAsync(password, newPassword, userNick);
+                    var user = await _userService.ChangePassAsync(passwords.Password, passwords.NewPassword, userNick);
                     return Ok(user);
                 }
-                catch (Exception e)
+                catch (InvalidDataException e)
                 {
-                    return BadRequest(e);
+                    return BadRequest(new {e.Message});
                 }
             }
             else
