@@ -25,7 +25,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpGet("userList")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserView>> GetAllUsers()
         {
             var users = await _userService.GetAllAsync(null);
@@ -33,7 +33,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpDelete("delete")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserView>> DeleteUser([FromBody]UserView user)
         {
             try
@@ -49,7 +49,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpDelete("softDelete")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserView>> BlockUser([FromBody]UserView user)
         {
             try
@@ -65,7 +65,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpDelete("unlock")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserView>> UnlockUser([FromBody]UserView user)
         {
             try

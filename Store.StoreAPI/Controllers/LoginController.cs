@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,8 +25,8 @@ namespace Store.StoreAPI.Controllers
         {
             try
             {
-                var token = await _userService.AuthenticateAsync(login);
-                return Ok(token);
+                var result = await _userService.AuthenticateAsync(login);
+                return Ok(result);
             }
             catch (BlockedUserException e)
             {

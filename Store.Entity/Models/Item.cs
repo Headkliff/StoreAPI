@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Store.Entity.Models
+﻿namespace Store.Entity.Models
 {
-    public class Item :EntityBase
+    public class Item : EntityBase
     {
         public string Name { get; set; }
         public string Category { get; set; }

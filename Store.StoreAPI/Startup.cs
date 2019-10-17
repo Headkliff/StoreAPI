@@ -30,6 +30,7 @@ namespace Store.StoreAPI
             services.AddScoped(typeof(IRepository<>), typeof(EntityRepository<>));
 
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IItemService, ItemService>();
 
             services.AddHttpContextAccessor();
 

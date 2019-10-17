@@ -15,5 +15,7 @@ namespace Store.Entity.Models
         [MaxLength(25), Required]
         public string SecondName { get; set; }
         public bool IsDeleted { get; set; }
+        [Required]
+        public string Role { get; set; }
     }
 }

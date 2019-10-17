@@ -12,8 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Store.BL.Exceptions;
 using Store.BL.Models;
-using Store.Entity.Models;
 using Store.Entity.Repository;
+using Login = Store.BL.Models.Login;
+using User = Store.Entity.Models.User;
 
 namespace Store.BL.Services
 {
@@ -56,7 +57,8 @@ namespace Store.BL.Services
             {
                 Nickname = entity.Nickname.Trim(), Password = BCrypt.Net.BCrypt.HashPassword(entity.Password),
                 FirstName = entity.FirstName.Trim(),
-                SecondName = entity.SecondName.Trim(), Email = entity.Email.Trim()
+                SecondName = entity.SecondName.Trim(), Email = entity.Email.Trim(),Role = "User"
+                
             };
             await _repository.AddAsync(newUser);
         }
@@ -122,10 +124,10 @@ namespace Store.BL.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<string> AuthenticateAsync(Login login)
+        public async Task<UserAuthorizeDTO> AuthenticateAsync(Login login)
         {
             var user = (await _repository.GetAllAsync(x =>
-                x.Nickname.Equals(login.Nickname, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+                x.Nickname.Equals(login.Nickname.Trim(), StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (user != null)
             {
                 var correct = BCrypt.Net.BCrypt.Verify(login.Password, user.Password);
@@ -135,9 +137,14 @@ namespace Store.BL.Services
                     {
                         throw new BlockedUserException("Are you banned. Talk with Administrator!");
                     }
-
+                    
                     var token = BuildToken(_mapper.Map<UserView>(user));
-                    return token;
+                    var result = new UserAuthorizeDTO
+                    {
+                        Token = token,
+                        User = _mapper.Map<UserView>(user)
+                    };
+                    return result;
                 }
                 else
                 {
@@ -162,9 +169,9 @@ namespace Store.BL.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, userView.Nickname),
                 new Claim(ClaimTypes.NameIdentifier, userView.Id.ToString()),
-                new Claim(ClaimTypes.Name, userView.Nickname)
+                new Claim(ClaimTypes.Name, userView.Nickname),
+                new Claim(ClaimTypes.Role, userView.Role )
             };
             ClaimsIdentity claimsIdentity =
                 new ClaimsIdentity(claims, "Token", ClaimsIdentity.DefaultNameClaimType,
