@@ -10,6 +10,8 @@ namespace Store.BL.Models
             CreateMap<User, UserView>();
             CreateMap<UserView, Login>();
             CreateMap<User, Register>();
+            CreateMap<Item, ItemView>();
+            CreateMap<ItemView, Item>();
         }
     }
 }

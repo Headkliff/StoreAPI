@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
+using AutoMapper;
+using Store.BL.Exceptions;
+using Store.BL.Models;
 using Store.Entity.Models;
 using Store.Entity.Repository;
 
@@ -12,19 +14,19 @@ namespace Store.BL.Services
     public class ItemService :IItemService
     {
         private readonly IRepository<Item> _repository;
-        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public ItemService(IConfiguration configuration, IRepository<Item> repository)
+        public ItemService(IRepository<Item> repository, IMapper mapper)
         {
-            _configuration = configuration;
             _repository = repository;
+            _mapper = mapper;
         }
 
 
-        public async Task<IList<Item>> GetAllAsync(Expression<Func<Item, bool>> expression)
+        public async Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression)
         {
             var items = await _repository.GetAllAsync(expression);
-            return items.ToList();
+            return _mapper.Map<IList<ItemView>>(items);
         }
 
         public async Task<Item> GetByIdAsync(long id)
@@ -33,19 +35,64 @@ namespace Store.BL.Services
             return item;
         }
 
-        public Task AddAsync(Item entity)
+        public async Task AddAsync(ItemView entity)
         {
-            throw new NotImplementedException();
+            var item = (await _repository.GetAllAsync(x =>
+                x.Name.Equals(entity.Name, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            if (item != null)
+            {
+                throw new ItemExistException("This Item already exist");
+            }
+
+            var newItem = new Item
+            {
+                Name = entity.Name.Trim(),
+                Category = entity.Category.Trim(),
+                Type = entity.Type.Trim(),
+                Cost = entity.Cost
+
+            };
+            await _repository.AddAsync(newItem);
         }
 
-        public Task DeleteAsync(long id)
+        public async Task DeleteAsync(ItemView item)
         {
-            throw new NotImplementedException();
+            var entity = await _repository.GetByIdAsync(item.Id);
+            if (entity != null)
+            {
+                await _repository.DeleteAsync(entity: entity);
+            }
         }
 
-        public Task<Item> UpdateAsync(Item entity)
+        public async Task<Item> UpdateAsync(Item entity)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _repository.UpdateAsync(entity);
+            }
+            catch (Exception)
+            {
+                throw new Exception("Something went wrong");
+            }
+
+            return await GetByIdAsync(entity.Id);
+        }
+
+        public async Task<ItemView> EditItemAsync(ItemView entry)
+        {
+            var item = await GetByIdAsync(entry.Id);
+            if (item != null)
+            {
+                item.Category = entry.Category;
+                item.Type = entry.Type;
+                item.Name = entry.Name;
+                item.Cost = entry.Cost;
+                return _mapper.Map<ItemView>(await UpdateAsync(item));
+            }
+            else
+            {
+                throw new ItemDoseNotExistException("Item doesn't exist");
+            }
         }
     }
 }

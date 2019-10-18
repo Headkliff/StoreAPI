@@ -1,9 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace Store.Entity.Models
+namespace Store.BL.Models
 {
-    public class Item : EntityBase
+    public class ItemView
     {
+        [Required]
+        public long Id { get; set; }
         [Required]
         [MinLength(4)]
         public string Name { get; set; }
