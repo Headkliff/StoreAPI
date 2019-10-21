@@ -38,7 +38,7 @@ namespace Store.BL.Services
         public async Task AddAsync(ItemView entity)
         {
             var item = (await _repository.GetAllAsync(x =>
-                x.Name.Equals(entity.Name, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+                x.Name.Equals(entity.Name.Trim(), StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
             if (item != null)
             {
                 throw new ItemExistException("This Item already exist");
@@ -83,9 +83,9 @@ namespace Store.BL.Services
             var item = await GetByIdAsync(entry.Id);
             if (item != null)
             {
-                item.Category = entry.Category;
-                item.Type = entry.Type;
-                item.Name = entry.Name;
+                item.Category = entry.Category.Trim();
+                item.Type = entry.Type.Trim();
+                item.Name = entry.Name.Trim();
                 item.Cost = entry.Cost;
                 return _mapper.Map<ItemView>(await UpdateAsync(item));
             }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Store.BL.Exceptions;
 using Store.BL.Models;
 using Store.BL.Services;
-using Store.Entity.Models;
 
 namespace Store.StoreAPI.Controllers
 {
@@ -64,12 +62,32 @@ namespace Store.StoreAPI.Controllers
             }
             
         }
+
         [HttpPost("delete"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ItemView>> DeleteItem(ItemView itemView)
         {
             try
             {
                 await _itemService.DeleteAsync(itemView);
+                return Ok();
+            }
+            catch (ItemDoseNotExistException e)
+            {
+                return BadRequest(new { e.Message });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { e.Message });
+            }
+
+        }
+
+        [HttpPost("create"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ItemView>> AddItem(ItemView itemView)
+        {
+            try
+            {
+                await _itemService.AddAsync(itemView);
                 return Ok();
             }
             catch (ItemDoseNotExistException e)
