@@ -12,6 +12,8 @@ namespace Store.Entity.Db
 
         public DbSet<User> Users { get; set; }
         public DbSet<Item> Items { get; set; }
+        public DbSet<ItemType> Types { get; set; }
+        public DbSet<ItemCategory> Categories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -10,8 +10,8 @@ using Store.Entity.Db;
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20191021130748_InitTypes")]
-    partial class InitTypes
+    [Migration("20191021132852_CategoryAndTypeContext")]
+    partial class CategoryAndTypeContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,6 +34,10 @@ namespace Store.Entity.Migrations
 
                     b.Property<DateTime>("CreateDateTime");
 
+                    b.Property<long?>("ItemCategoryId");
+
+                    b.Property<long?>("ItemTypeId");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -44,7 +48,47 @@ namespace Store.Entity.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ItemCategoryId");
+
+                    b.HasIndex("ItemTypeId");
+
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Store.Entity.Models.ItemCategory", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDateTime");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("UpdateDateTime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Store.Entity.Models.ItemType", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDateTime");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<DateTime?>("UpdateDateTime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Types");
                 });
 
             modelBuilder.Entity("Store.Entity.Models.User", b =>
@@ -86,6 +130,17 @@ namespace Store.Entity.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Store.Entity.Models.Item", b =>
+                {
+                    b.HasOne("Store.Entity.Models.ItemCategory")
+                        .WithMany("Items")
+                        .HasForeignKey("ItemCategoryId");
+
+                    b.HasOne("Store.Entity.Models.ItemType")
+                        .WithMany("Items")
+                        .HasForeignKey("ItemTypeId");
                 });
 #pragma warning restore 612, 618
         }
