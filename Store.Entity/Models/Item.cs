@@ -7,12 +7,19 @@ namespace Store.Entity.Models
         [Required]
         [MinLength(4)]
         public string Name { get; set; }
+
         [Required]
-        [MinLength(4)]
-        public string Category { get; set; }
+        public ItemCategory Category { get; set; }
+        
         [Required]
-        [MinLength(4)]
-        public string Type { get; set; }
+        public long ItemCategoryId { get; set; }
+
+        [Required]
+        public ItemType Type { get; set; }
+
+        [Required]
+        public long ItemTypeId { get; set; }
+
         [Required]
         public float Cost { get; set; }
     }

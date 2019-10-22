@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Store.BL.Models
 {
@@ -9,15 +6,23 @@ namespace Store.BL.Models
     {
         [Required]
         public long Id { get; set; }
+
         [Required]
         [MinLength(4)]
         public string Name { get; set; }
+
         [Required]
-        [MinLength(4)]
-        public string Category { get; set; }
+        public long ItemCategoryId { get; set; }
+
         [Required]
-        [MinLength(4)]
-        public string Type { get; set; }
+        public string CategoryName { get; set; }
+        
+        [Required]
+        public long ItemTypeId { get; set; }
+
+        [Required]
+        public string TypeName { get; set; }
+
         [Required]
         public float Cost { get; set; }
     }

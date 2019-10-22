@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +11,7 @@ using Store.BL.Services;
 using Store.Entity.Db;
 using Store.Entity.Repository;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Text;
 
 namespace Store.StoreAPI
 {
@@ -96,10 +96,7 @@ namespace Store.StoreAPI
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Store API V1"); });
 
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader().AllowCredentials());
             app.UseAuthentication();

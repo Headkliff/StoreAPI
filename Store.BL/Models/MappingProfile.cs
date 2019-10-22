@@ -11,7 +11,8 @@ namespace Store.BL.Models
             CreateMap<UserView, Login>();
             CreateMap<User, Register>();
             CreateMap<Item, ItemView>();
-            CreateMap<ItemView, Item>();
+            CreateMap<ItemView, Item>().ForPath(x => x.Type.Name, x => x.MapFrom(z => z.TypeName));
+            CreateMap<ItemView, Item>().ForPath(x => x.Category.Name, x => x.MapFrom(z => z.CategoryName));
         }
     }
 }

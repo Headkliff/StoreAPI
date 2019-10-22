@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Store.BL.Exceptions;
 using Store.BL.Models;
 using Store.Entity.Models;
@@ -11,7 +12,7 @@ using Store.Entity.Repository;
 
 namespace Store.BL.Services
 {
-    public class ItemService :IItemService
+    public class ItemService : IItemService
     {
         private readonly IRepository<Item> _repository;
         private readonly IMapper _mapper;
@@ -23,9 +24,10 @@ namespace Store.BL.Services
         }
 
 
-        public async Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression)
+        public async Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression, params string [] includes)
         {
-            var items = await _repository.GetAllAsync(expression);
+            
+            var items = (await _repository.GetAllAsync(expression));
             return _mapper.Map<IList<ItemView>>(items);
         }
 
@@ -47,8 +49,8 @@ namespace Store.BL.Services
             var newItem = new Item
             {
                 Name = entity.Name.Trim(),
-                Category = entity.Category.Trim(),
-                Type = entity.Type.Trim(),
+                ItemCategoryId = entity.ItemCategoryId,
+                ItemTypeId = entity.ItemTypeId,
                 Cost = entity.Cost
 
             };
@@ -83,8 +85,8 @@ namespace Store.BL.Services
             var item = await GetByIdAsync(entry.Id);
             if (item != null)
             {
-                item.Category = entry.Category.Trim();
-                item.Type = entry.Type.Trim();
+                item.ItemCategoryId = entry.ItemCategoryId;
+                item.ItemTypeId = entry.ItemTypeId;
                 item.Name = entry.Name.Trim();
                 item.Cost = entry.Cost;
                 return _mapper.Map<ItemView>(await UpdateAsync(item));

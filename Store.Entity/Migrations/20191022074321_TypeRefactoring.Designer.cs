@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Store.Entity.Db;
 
 namespace Store.Entity.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20191022074321_TypeRefactoring")]
+    partial class TypeRefactoring
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,11 +27,14 @@ namespace Store.Entity.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Category")
+                        .IsRequired();
+
                     b.Property<float>("Cost");
 
                     b.Property<DateTime>("CreateDateTime");
 
-                    b.Property<long>("ItemCategoryId");
+                    b.Property<long?>("ItemCategoryId");
 
                     b.Property<long>("ItemTypeId");
 
@@ -126,10 +131,9 @@ namespace Store.Entity.Migrations
 
             modelBuilder.Entity("Store.Entity.Models.Item", b =>
                 {
-                    b.HasOne("Store.Entity.Models.ItemCategory", "Category")
+                    b.HasOne("Store.Entity.Models.ItemCategory")
                         .WithMany("Items")
-                        .HasForeignKey("ItemCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ItemCategoryId");
 
                     b.HasOne("Store.Entity.Models.ItemType", "Type")
                         .WithMany("Items")

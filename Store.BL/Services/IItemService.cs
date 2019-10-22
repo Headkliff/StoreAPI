@@ -9,7 +9,7 @@ namespace Store.BL.Services
 {
     public interface IItemService
     {
-        Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression);
+        Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression, string[] includes);
         Task<Item> GetByIdAsync(long id);
         Task AddAsync(ItemView entity);
         Task DeleteAsync(ItemView entity);

@@ -3,39 +3,39 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Store.Entity.Migrations
 {
-    public partial class InitTypes : Migration
+    public partial class InitCategory : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
-                table: "Types",
-                columns: new[] {"Name", "CreateDateTime" },
-                values: new object[] {"Brick", DateTime.UtcNow}
+                table: "Categories",
+                columns: new[] { "Name", "CreateDateTime" },
+                values: new object[] { "Construction Materials", DateTime.UtcNow }
             );
             migrationBuilder.InsertData(
-                table: "Types",
+                table: "Categories",
                 columns: new[] { "Name", "CreateDateTime" },
-                values: new object[] { "Abrasive", DateTime.UtcNow }
+                values: new object[] { "Expendable materials", DateTime.UtcNow }
             );
             migrationBuilder.InsertData(
-                table: "Types",
+                table: "Categories",
                 columns: new[] { "Name", "CreateDateTime" },
-                values: new object[] { "Bathrooms", DateTime.UtcNow }
+                values: new object[] { "Plumbing", DateTime.UtcNow }
             );
             migrationBuilder.InsertData(
-                table: "Types",
+                table: "Categories",
                 columns: new[] { "Name", "CreateDateTime" },
-                values: new object[] { "Concrete mixers", DateTime.UtcNow }
+                values: new object[] { "Construction Equipment", DateTime.UtcNow }
             );
             migrationBuilder.InsertData(
-                table: "Types",
+                table: "Categories",
                 columns: new[] { "Name", "CreateDateTime" },
-                values: new object[] { "Furniture for home", DateTime.UtcNow }
+                values: new object[] { "Furniture", DateTime.UtcNow }
             );
             migrationBuilder.InsertData(
-                table: "Types",
+                table: "Categories",
                 columns: new[] { "Name", "CreateDateTime" },
-                values: new object[] { "Decorative rock", DateTime.UtcNow }
+                values: new object[] { "Tile", DateTime.UtcNow }
             );
         }
 

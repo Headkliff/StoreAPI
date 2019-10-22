@@ -6,9 +6,13 @@ using Store.Entity.Models;
 
 namespace Store.Entity.Db
 {
-    public class ApplicationContext :DbContext
+    public sealed class ApplicationContext :DbContext
     {
-        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options){}
+
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
+        {
+            this.ChangeTracker.LazyLoadingEnabled = false;
+        }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Item> Items { get; set; }

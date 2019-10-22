@@ -19,7 +19,7 @@ namespace Store.Entity.Repository
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression)
+        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression =null)
         {
             return await Task.Run(() => (expression != null ? _dbSet.Where(expression) : _dbSet).AsQueryable());
         }

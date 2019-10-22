@@ -2,26 +2,22 @@
 
 namespace Store.Entity.Migrations
 {
-    public partial class RoleDelitte : Migration
+    public partial class RefactoringCategory : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Role",
-                table: "Users");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                table: "Users",
-                nullable: true);
+                name: "Category",
+                table: "Items");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Role",
-                table: "Users",
-                nullable: true);
+                name: "Category",
+                table: "Items",
+                nullable: false,
+                defaultValue: "");
         }
     }
 }

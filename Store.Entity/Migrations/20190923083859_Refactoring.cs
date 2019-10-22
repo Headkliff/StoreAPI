@@ -37,11 +37,6 @@ namespace Store.Entity.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldNullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                table: "Users",
-                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
