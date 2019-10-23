@@ -19,9 +19,10 @@ namespace Store.Entity.Repository
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression =null)
+        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression = null, params Expression<Func<T, object>>[] includes)
         {
-            return await Task.Run(() => (expression != null ? _dbSet.Where(expression) : _dbSet).AsQueryable());
+            return  includes.Aggregate(await Task.Run(() => (expression != null ? _dbSet.Where(expression) : _dbSet)),
+                (current, includeProperty) => current.Include(includeProperty));
         }
 
         public async Task<T> GetByIdAsync(long id)

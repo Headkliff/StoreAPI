@@ -13,6 +13,7 @@ namespace Store.BL.Models
             CreateMap<Item, ItemView>();
             CreateMap<ItemView, Item>().ForPath(x => x.Type.Name, x => x.MapFrom(z => z.TypeName));
             CreateMap<ItemView, Item>().ForPath(x => x.Category.Name, x => x.MapFrom(z => z.CategoryName));
+            CreateMap<ItemType, ItemEditDto>();
         }
     }
 }

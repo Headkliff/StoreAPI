@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace Store.StoreAPI.Controllers
         {
             try
             {
-                var items = await _itemService.GetAllAsync(null);
+                var items = await _itemService.GetAllAsync(null, item => item.Type, item => item.Category);
                 return Ok(items);
             }
             catch (Exception e)
@@ -35,17 +36,18 @@ namespace Store.StoreAPI.Controllers
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<ActionResult<ItemView>> GetItemTask(long id)
         {
-            var item = await _itemService.GetByIdAsync(id);
+            var item = await _itemService.GetAllAsync(item1 => item1.Id.Equals(id), item1 => item1.Type,
+                item1 => item1.Category);
             if (item == null)
             {
                 return NotFound();
             }
 
-            return Ok(item);
+            return Ok(item.FirstOrDefault());
         }
 
         [HttpPost("edit"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemView>> EditItem(ItemView newItemInfo)
+        public async Task<ActionResult<ItemView>> EditItem(ItemEditDto newItemInfo)
         {
             try
             {
@@ -58,9 +60,8 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
-            
         }
 
         [HttpPost("delete"), Authorize(Roles = "Admin")]
@@ -73,32 +74,30 @@ namespace Store.StoreAPI.Controllers
             }
             catch (ItemDoseNotExistException e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
             catch (Exception e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
-
         }
 
         [HttpPost("create"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemView>> AddItem(ItemView itemView)
+        public async Task<ActionResult<ItemView>> AddItem(ItemEditDto itemEditDto)
         {
             try
             {
-                await _itemService.AddAsync(itemView);
+                await _itemService.AddAsync(itemEditDto);
                 return Ok();
             }
             catch (ItemDoseNotExistException e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
             catch (Exception e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
-
         }
     }
 }
