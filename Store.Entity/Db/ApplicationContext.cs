@@ -18,6 +18,8 @@ namespace Store.Entity.Db
         public DbSet<Item> Items { get; set; }
         public DbSet<ItemType> Types { get; set; }
         public DbSet<ItemCategory> Categories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<ItemOrder> ItemOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -15,5 +15,8 @@ namespace Store.BL.Services
         Task DeleteAsync(ItemView entity);
         Task<Item> UpdateAsync(Item entity);
         Task<ItemView> EditItemAsync(ItemEditDto entity);
+
+        Task<IList<TypeView>> GetTypesAsync(Expression<Func<ItemType, bool>> expression = null);
+        Task<IList<CategoryView>> GetCategoriesAsync(Expression<Func<ItemCategory, bool>> expression = null);
     }
 }

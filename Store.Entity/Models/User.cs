@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Store.Entity.Models
 {
@@ -17,5 +18,12 @@ namespace Store.Entity.Models
         public bool IsDeleted { get; set; }
         [Required]
         public string Role { get; set; }
+
+        public ICollection<Order> Orders { get; set; }
+
+        public User()
+        {
+            Orders = new List<Order>();
+        }
     }
 }

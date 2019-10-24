@@ -25,9 +25,10 @@ namespace Store.Entity.Repository
                 (current, includeProperty) => current.Include(includeProperty));
         }
 
-        public async Task<T> GetByIdAsync(long id)
+        public async Task<T> GetByIdAsync(long id, params Expression<Func<T, object>>[] includes)
         {
-            return await _dbSet.FindAsync(id);
+            return  includes.Aggregate(await Task.Run(() => (_dbSet.Where(x=>x.Id.Equals(id)))),
+                (current, includeProperty) => current.Include(includeProperty)).FirstOrDefault(); 
         }
 
         public async Task AddAsync(T entity)

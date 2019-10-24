@@ -99,5 +99,33 @@ namespace Store.StoreAPI.Controllers
                 return BadRequest(new {e.Message});
             }
         }
+
+        [HttpGet("types"), AllowAnonymous]
+        public async Task<ActionResult<ItemView>> GetAllTypes()
+        {
+            try
+            {
+                var types = await _itemService.GetTypesAsync();
+                return Ok(types);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { e.Message });
+            }
+        }
+
+        [HttpGet("categories"), AllowAnonymous]
+        public async Task<ActionResult<ItemView>> GetCategories()
+        {
+            try
+            {
+                var categories = await _itemService.GetCategoriesAsync();
+                return Ok(categories);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { e.Message });
+            }
+        }
     }
 }

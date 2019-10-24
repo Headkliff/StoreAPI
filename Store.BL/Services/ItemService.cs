@@ -87,14 +87,16 @@ namespace Store.BL.Services
 
         public async Task<ItemView> EditItemAsync(ItemEditDto entry)
         {
-            var item = (await _repository.GetAllAsync(x => x.Id.Equals(entry.Id), item1 => item1.Type))
-                .FirstOrDefault();
+            var item = (await _repository.GetByIdAsync(entry.Id, item1 => item1.Type, item1 => item1.Category));
+
             var type = (await _typeRepository.GetAllAsync(x =>
                 x.Name.Equals(entry.TypeName, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
+            var category = (await _categoryRepository.GetAllAsync(x =>
+                x.Name.Equals(entry.CategoryName, StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
 
             if (item != null)
             {
-                //item.ItemCategoryId = entry.CategoryName;
+                item.Category = category;
                 item.Type = type;
                 item.Name = entry.Name.Trim();
                 item.Cost = entry.Cost;
@@ -104,6 +106,20 @@ namespace Store.BL.Services
             {
                 throw new ItemDoseNotExistException("Item doesn't exist");
             }
+        }
+
+        public async Task<IList<TypeView>> GetTypesAsync(Expression<Func<ItemType, bool>> expression = null)
+        {
+            var types = await _typeRepository.GetAllAsync(expression);
+
+            return _mapper.Map<IList<TypeView>>(types);
+        }
+
+        public async Task<IList<CategoryView>> GetCategoriesAsync(Expression<Func<ItemCategory, bool>> expression = null)
+        {
+            var categories = await _categoryRepository.GetAllAsync(expression);
+
+            return _mapper.Map<IList<CategoryView>>(categories);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Store.Entity.Migrations
                     Password = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     SecondName = table.Column<string>(nullable: true),
+                    Email = table.Column<string>(nullable: true),
                     Role = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

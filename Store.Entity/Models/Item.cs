@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Store.Entity.Models
 {
@@ -16,5 +17,12 @@ namespace Store.Entity.Models
 
         [Required]
         public float Cost { get; set; }
+
+        public ICollection<ItemOrder> Orders { get; set; }
+
+        public Item() 
+        {
+            Orders = new List<ItemOrder>();
+        }
     }
 }

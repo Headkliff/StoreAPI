@@ -9,11 +9,6 @@ namespace Store.Entity.Migrations
             migrationBuilder.DropColumn(
                 name: "Role",
                 table: "Users");
-
-            migrationBuilder.AddColumn<string>(
-                name: "Email",
-                table: "Users",
-                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
