@@ -35,13 +35,13 @@ namespace Store.BL.Services
             return _mapper.Map<IList<ItemView>>(items);
         }
 
-        public async Task<Item> GetByIdAsync(long id)
+        public async Task<ItemView> GetByIdAsync(long id)
         {
             var item = await _repository.GetByIdAsync(id);
-            return item;
+            return _mapper.Map<ItemView>(item);
         }
 
-        public async Task AddAsync(ItemEditDto entity)
+        public async Task AddAsync(ItemCreateDto entity)
         {
             var item = (await _repository.GetAllAsync(x =>
                 x.Name.Equals(entity.Name.Trim(), StringComparison.OrdinalIgnoreCase))).FirstOrDefault();
@@ -62,16 +62,17 @@ namespace Store.BL.Services
             await _repository.AddAsync(newItem);
         }
 
-        public async Task DeleteAsync(ItemView item)
+        public async Task DeleteAsync(long id)
         {
-            var entity = await _repository.GetByIdAsync(item.Id);
-            if (entity != null)
+            var entity = await _repository.GetByIdAsync(id);
+            if (entity == null)
             {
-                await _repository.DeleteAsync(entity: entity);
+                throw new ItemDoseNotExistException("Item not fount");
             }
+            await _repository.DeleteAsync(entity: entity);
         }
 
-        public async Task<Item> UpdateAsync(Item entity)
+        public async Task<ItemView> UpdateAsync(Item entity)
         {
             try
             {

@@ -107,11 +107,11 @@ namespace Store.StoreAPI.Controllers
             }
             catch (UserDoesNotExistException e)
             {
-                return BadRequest(new {e.Message});
+                return BadRequest(e);
             }
             catch (Exception e)
             {
-                return Conflict(new {e.Message});
+                return Conflict(e);
             }
         }
 

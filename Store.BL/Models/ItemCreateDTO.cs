@@ -2,11 +2,8 @@
 
 namespace Store.BL.Models
 {
-    public class ItemView
+    public class ItemCreateDto
     {
-        [Required]
-        public long Id { get; set; }
-
         [Required]
         [MinLength(4)]
         public string Name { get; set; }

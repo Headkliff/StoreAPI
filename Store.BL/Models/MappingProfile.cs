@@ -15,6 +15,8 @@ namespace Store.BL.Models
             CreateMap<ItemView, Item>().ForPath(x => x.Category.Name, x => x.MapFrom(z => z.CategoryName));
             CreateMap<ItemType, TypeView>();
             CreateMap<ItemCategory, CategoryView>();
+            CreateMap<OrderView, Order>().ForPath(x => x.User.Nickname, x => x.MapFrom(z => z.UserName)); 
+
         }
     }
 }

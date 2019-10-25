@@ -17,6 +17,7 @@ namespace Store.Entity.Models
 
         [Required]
         public float Cost { get; set; }
+        public bool IsDeleted { get; set; }
 
         public ICollection<ItemOrder> Orders { get; set; }
 

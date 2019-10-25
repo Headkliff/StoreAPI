@@ -64,12 +64,12 @@ namespace Store.StoreAPI.Controllers
             }
         }
 
-        [HttpPost("delete"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemView>> DeleteItem(ItemView itemView)
+        [HttpDelete("delete"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ItemView>> DeleteItem([FromBody]ItemView item)
         {
             try
             {
-                await _itemService.DeleteAsync(itemView);
+                await _itemService.DeleteAsync(item.Id);
                 return Ok();
             }
             catch (ItemDoseNotExistException e)
@@ -83,7 +83,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpPost("create"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemView>> AddItem(ItemEditDto itemEditDto)
+        public async Task<ActionResult<ItemView>> AddItem(ItemCreateDto itemEditDto)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpGet("types"), AllowAnonymous]
-        public async Task<ActionResult<ItemView>> GetAllTypes()
+        public async Task<ActionResult<TypeView>> GetAllTypes()
         {
             try
             {
@@ -115,7 +115,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpGet("categories"), AllowAnonymous]
-        public async Task<ActionResult<ItemView>> GetCategories()
+        public async Task<ActionResult<CategoryView>> GetCategories()
         {
             try
             {
