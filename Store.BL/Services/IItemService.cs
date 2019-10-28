@@ -9,7 +9,9 @@ namespace Store.BL.Services
 {
     public interface IItemService
     {
-        Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression = null, params Expression<Func<Item, object>>[] includes);
+        Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression = null,
+            string selectedSort = "NameAsc",int pageNumber =0, params Expression<Func<Item, object>>[] includes);
+
         Task<ItemView> GetByIdAsync(long id);
         Task AddAsync(ItemCreateDto entity);
         Task DeleteAsync(long entity);

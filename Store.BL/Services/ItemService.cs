@@ -29,10 +29,40 @@ namespace Store.BL.Services
 
 
         public async Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression = null,
+            string selectedSort = "NameAsc",int pageNumber=0,
             params Expression<Func<Item, object>>[] includes)
         {
             var items = (await _repository.GetAllAsync(expression, includes));
-            return _mapper.Map<IList<ItemView>>(items);
+
+            switch (selectedSort)
+            {
+                case "NameAsc":
+                    items = items.OrderBy(item => item.Name);
+                    break;
+                case "NameDesc":
+                    items = items.OrderByDescending(item => item.Name);
+                    break;
+                case "ItemTypeAsc":
+                    items = items.OrderBy(item => item.Type.Name);
+                    break;
+                case "ItemTypeDesc":
+                    items = items.OrderByDescending(item => item.Type.Name);
+                    break;
+                case "ItemCostAsc":
+                    items = items.OrderBy(item => item.Cost);
+                    break;
+                case "ItemCostDesc":
+                    items = items.OrderByDescending(item => item.Cost);
+                    break;
+                case "DateAsc":
+                    items = items.OrderBy(item => item.UpdateDateTime);
+                    break;
+                case "DateDesc":
+                    items = items.OrderByDescending(item => item.UpdateDateTime);
+                    break;
+            }
+
+            return _mapper.Map<IList<ItemView>>(items.Skip(pageNumber * 9).Take(9));
         }
 
         public async Task<ItemView> GetByIdAsync(long id)
@@ -69,6 +99,7 @@ namespace Store.BL.Services
             {
                 throw new ItemDoseNotExistException("Item not fount");
             }
+
             await _repository.DeleteAsync(entity: entity);
         }
 
@@ -116,7 +147,8 @@ namespace Store.BL.Services
             return _mapper.Map<IList<TypeView>>(types);
         }
 
-        public async Task<IList<CategoryView>> GetCategoriesAsync(Expression<Func<ItemCategory, bool>> expression = null)
+        public async Task<IList<CategoryView>> GetCategoriesAsync(
+            Expression<Func<ItemCategory, bool>> expression = null)
         {
             var categories = await _categoryRepository.GetAllAsync(expression);
 

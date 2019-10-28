@@ -19,12 +19,17 @@ namespace Store.StoreAPI.Controllers
             _itemService = itemService;
         }
 
-        [HttpGet("items"), AllowAnonymous]
-        public async Task<ActionResult<ItemView>> GetAllItems()
+        [HttpPost("items"), AllowAnonymous]
+        public async Task<ActionResult<ItemView>> GetAllItems(ItemQuery query)
         {
+            var name = query.Name.Trim();
+            var selectedSort = query.SelectedSort.Trim();
             try
             {
-                var items = await _itemService.GetAllAsync(null, item => item.Type, item => item.Category);
+                var items = await (name != ""
+                    ? (_itemService.GetAllAsync(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase), selectedSort, query.PageNumber,
+                        item => item.Type, item => item.Category))
+                    : (_itemService.GetAllAsync(null, selectedSort, query.PageNumber, item => item.Type, item => item.Category)));
                 return Ok(items);
             }
             catch (Exception e)
@@ -33,10 +38,11 @@ namespace Store.StoreAPI.Controllers
             }
         }
 
+
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<ActionResult<ItemView>> GetItemTask(long id)
         {
-            var item = await _itemService.GetAllAsync(item1 => item1.Id.Equals(id), item1 => item1.Type,
+            var item = await _itemService.GetAllAsync(item1 => item1.Id.Equals(id), null,0, item1 => item1.Type,
                 item1 => item1.Category);
             if (item == null)
             {
@@ -65,7 +71,7 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpDelete("delete"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemView>> DeleteItem([FromBody]ItemView item)
+        public async Task<ActionResult<ItemView>> DeleteItem([FromBody] ItemView item)
         {
             try
             {
@@ -110,7 +116,7 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
         }
 
@@ -124,7 +130,7 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                return BadRequest(new { e.Message });
+                return BadRequest(new {e.Message});
             }
         }
     }
