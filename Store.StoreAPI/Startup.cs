@@ -35,13 +35,13 @@ namespace Store.StoreAPI
             services.AddHttpContextAccessor();
 
 
-            services.AddDbContext<ApplicationContext>(opt =>
-                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                    x => x.MigrationsAssembly("Store.Entity")));
-
             //services.AddDbContext<ApplicationContext>(opt =>
-            //    opt.UseSqlServer(Configuration.GetConnectionString("Home"),
+            //    opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
             //        x => x.MigrationsAssembly("Store.Entity")));
+
+            services.AddDbContext<ApplicationContext>(opt =>
+                opt.UseSqlServer(Configuration.GetConnectionString("Home"),
+                    x => x.MigrationsAssembly("Store.Entity")));
 
 
             services.AddAutoMapper();
