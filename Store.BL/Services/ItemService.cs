@@ -42,12 +42,6 @@ namespace Store.BL.Services
                 case "NameDesc":
                     items = items.OrderByDescending(item => item.Name);
                     break;
-                case "ItemTypeAsc":
-                    items = items.OrderBy(item => item.Type.Name);
-                    break;
-                case "ItemTypeDesc":
-                    items = items.OrderByDescending(item => item.Type.Name);
-                    break;
                 case "ItemCostAsc":
                     items = items.OrderBy(item => item.Cost);
                     break;

@@ -9,5 +9,6 @@ namespace Store.BL.Models
         public string Name { get; set; }
         public string SelectedSort { get; set; }
         public int PageNumber { get; set; }
+        public string Category { get; set; }
     }
 }
