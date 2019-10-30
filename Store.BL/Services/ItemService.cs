@@ -28,24 +28,27 @@ namespace Store.BL.Services
         }
 
 
-        public async Task<IList<ItemView>> GetAllAsync(Expression<Func<Item, bool>> expression = null,
-            string selectedSort = "NameAsc",int pageNumber=0,
+        public async Task<ItemViewList> GetAllAsync(ItemQuery query,
             params Expression<Func<Item, object>>[] includes)
         {
-            var items = (await _repository.GetAllAsync(expression, includes));
+            var name = query.Name.Trim();
+            var items = (await _repository.GetAllAsync(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase) &&
+                                                            x.Category.Name.Contains(query.Category) &&
+                                                            x.Type.Name.Contains(query.Type), includes));
+            const int itemsOnPage = 9;
 
-            switch (selectedSort)
+            switch (query.SelectedSort)
             {
-                case "NameAsc":
+                case "nameasc":
                     items = items.OrderBy(item => item.Name);
                     break;
-                case "NameDesc":
+                case "namedesc":
                     items = items.OrderByDescending(item => item.Name);
                     break;
-                case "ItemCostAsc":
+                case "costasc":
                     items = items.OrderBy(item => item.Cost);
                     break;
-                case "ItemCostDesc":
+                case "costdesc":
                     items = items.OrderByDescending(item => item.Cost);
                     break;
                 case "DateAsc":
@@ -56,12 +59,19 @@ namespace Store.BL.Services
                     break;
             }
 
-            return _mapper.Map<IList<ItemView>>(items.Skip(pageNumber * 9).Take(9));
+            long count = items.Count();
+            var itemsList = _mapper.Map<IList<ItemView>>(items.Skip(query.PageNumber * itemsOnPage).Take(itemsOnPage));
+            ItemViewList itemViewList = new ItemViewList
+            {
+                Items = itemsList,
+                Count = count
+            };
+            return itemViewList;
         }
 
-        public async Task<ItemView> GetByIdAsync(long id)
+        public async Task<ItemView> GetByIdAsync(long id, params Expression<Func<Item, object>>[] includes)
         {
-            var item = await _repository.GetByIdAsync(id);
+            var item = await _repository.GetByIdAsync(id, includes);
             return _mapper.Map<ItemView>(item);
         }
 

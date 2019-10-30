@@ -20,16 +20,13 @@ namespace Store.StoreAPI.Controllers
         }
 
         [HttpPost("items"), AllowAnonymous]
-        public async Task<ActionResult<ItemView>> GetAllItems(ItemQuery query)
+        public async Task<ActionResult> GetAllItems(ItemQuery query)
         {
-            var name = query.Name.Trim();
-            var selectedSort = query.SelectedSort.Trim();
             try
             {
-                var items = await (name != ""
-                    ? (_itemService.GetAllAsync(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase), selectedSort, query.PageNumber,
-                        item => item.Type, item => item.Category))
-                    : (_itemService.GetAllAsync(null, selectedSort, query.PageNumber, item => item.Type, item => item.Category)));
+                var items = await ((_itemService.GetAllAsync(query, item => item.Type,
+                    item => item.Category)));
+
                 return Ok(items);
             }
             catch (Exception e)
@@ -42,14 +39,13 @@ namespace Store.StoreAPI.Controllers
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<ActionResult<ItemView>> GetItemTask(long id)
         {
-            var item = await _itemService.GetAllAsync(item1 => item1.Id.Equals(id), null,0, item1 => item1.Type,
-                item1 => item1.Category);
+            var item = await _itemService.GetByIdAsync(id, item1 => item1.Type, item1 => item1.Category);
             if (item == null)
             {
                 return NotFound();
             }
 
-            return Ok(item.FirstOrDefault());
+            return Ok(item);
         }
 
         [HttpPost("edit"), Authorize(Roles = "Admin")]

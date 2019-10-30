@@ -9,7 +9,7 @@ namespace Store.BL.Services
 {
     public interface IUserService
     {
-        Task<IList<UserView>> GetAllAsync(Expression<Func<User, bool>> expression);
+        Task<IList<UserView>> GetAllAsync(Expression<Func<User, bool>> expression, int pageNumber = 0);
         Task<UserView> GetByIdAsync(long id);
 
         Task AddAsync(Register entity);

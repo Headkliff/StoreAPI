@@ -32,10 +32,10 @@ namespace Store.BL.Services
             _configuration = configuration;
         }
 
-        public async Task<IList<UserView>> GetAllAsync(Expression<Func<User, bool>> expression)
+        public async Task<IList<UserView>> GetAllAsync(Expression<Func<User, bool>> expression, int pageNumber = 0)
         {
             var users = await _repository.GetAllAsync(expression);
-            return _mapper.Map<IList<UserView>>(users);
+            return _mapper.Map<IList<UserView>>(users.Skip(pageNumber*9).Take(9));
         }
 
         public async Task<UserView> GetByIdAsync(long id)

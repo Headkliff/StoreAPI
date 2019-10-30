@@ -10,5 +10,6 @@ namespace Store.BL.Models
         public string SelectedSort { get; set; }
         public int PageNumber { get; set; }
         public string Category { get; set; }
+        public string Type { get; set; }
     }
 }

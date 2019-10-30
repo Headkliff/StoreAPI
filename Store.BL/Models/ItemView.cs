@@ -19,5 +19,6 @@ namespace Store.BL.Models
 
         [Required]
         public float Cost { get; set; }
+
     }
 }

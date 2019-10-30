@@ -24,11 +24,11 @@ namespace Store.StoreAPI.Controllers
             _context = context;
         }
 
-        [HttpGet("userList")]
+        [HttpPost("userList")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<UserView>> GetAllUsers()
+        public async Task<ActionResult<UserView>> GetAllUsers(UserQuery query)
         {
-            var users = await _userService.GetAllAsync(null);
+            var users = await _userService.GetAllAsync(user=>user.Nickname.Contains(query.Nickname.Trim())&&user.Email.Contains(query.Email.Trim()), query.PageNumber);
             return Ok(users);
         }
 
@@ -43,8 +43,7 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                return BadRequest(e.Message);
             }
         }
 
@@ -59,8 +58,7 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                return BadRequest(e.Message);
             }
         }
 
@@ -75,8 +73,7 @@ namespace Store.StoreAPI.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                return BadRequest(e.Message);
             }
         }
 
@@ -107,11 +104,11 @@ namespace Store.StoreAPI.Controllers
             }
             catch (UserDoesNotExistException e)
             {
-                return BadRequest(e);
+                return BadRequest(e.Message);
             }
             catch (Exception e)
             {
-                return Conflict(e);
+                return Conflict(e.Message);
             }
         }
 
