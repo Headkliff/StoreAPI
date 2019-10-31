@@ -35,8 +35,10 @@ namespace Store.BL.Services
             var items = (await _repository.GetAllAsync(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase) &&
                                                             x.Category.Name.Contains(query.Category) &&
                                                             x.Type.Name.Contains(query.Type), includes));
-            const int itemsOnPage = 9;
-
+            if (query.Cost != 0)
+            {
+                items=items.Where(x=>x.Cost.Equals(query.Cost));
+            }
             switch (query.SelectedSort)
             {
                 case "nameasc":
@@ -44,6 +46,18 @@ namespace Store.BL.Services
                     break;
                 case "namedesc":
                     items = items.OrderByDescending(item => item.Name);
+                    break;
+                case "categoryNameasc":
+                    items = items.OrderBy(item => item.Category.Name);
+                    break;
+                case "categoryNamedesc":
+                    items = items.OrderByDescending(item => item.Category.Name);
+                    break;
+                case "typeNameasc":
+                    items = items.OrderBy(item => item.Type.Name);
+                    break;
+                case "typeNamedesc":
+                    items = items.OrderByDescending(item => item.Type.Name);
                     break;
                 case "costasc":
                     items = items.OrderBy(item => item.Cost);
@@ -60,7 +74,7 @@ namespace Store.BL.Services
             }
 
             long count = items.Count();
-            var itemsList = _mapper.Map<IList<ItemView>>(items.Skip(query.PageNumber * itemsOnPage).Take(itemsOnPage));
+            var itemsList = _mapper.Map<IList<ItemView>>(items.Skip(query.Skip).Take(query.Take));
             ItemViewList itemViewList = new ItemViewList
             {
                 Items = itemsList,
