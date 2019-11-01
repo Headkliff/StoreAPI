@@ -35,6 +35,20 @@ namespace Store.StoreAPI.Controllers
             }
         }
 
+        [HttpPost("sort"), AllowAnonymous]
+        public async Task<ActionResult> GetByFilter(ItemQuery query)
+        {
+            try
+            {
+                var items = await _itemService.GetByFilter(query);
+                return Ok(items);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
 
         [HttpGet("{id}"), AllowAnonymous]
         public async Task<ActionResult<ItemView>> GetItemTask(long id)

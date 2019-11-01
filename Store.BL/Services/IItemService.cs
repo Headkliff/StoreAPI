@@ -11,6 +11,8 @@ namespace Store.BL.Services
     {
         Task<ItemViewList> GetAllAsync(ItemQuery query, params Expression<Func<Item, object>>[] includes);
 
+        Task<ItemViewList> GetByFilter(ItemQuery query);
+
         Task<ItemView> GetByIdAsync(long id, params Expression<Func<Item, object>>[] includes);
         Task AddAsync(ItemCreateDto entity);
         Task DeleteAsync(long entity);

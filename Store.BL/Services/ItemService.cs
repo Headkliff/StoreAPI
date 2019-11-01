@@ -31,14 +31,34 @@ namespace Store.BL.Services
         public async Task<ItemViewList> GetAllAsync(ItemQuery query,
             params Expression<Func<Item, object>>[] includes)
         {
+            var items = (await _repository.GetAllAsync(null, includes));
+            long count = items.Count();
+            var itemsList = _mapper.Map<IList<ItemView>>(items.Skip(query.Skip).Take(query.Take));
+            ItemViewList itemViewList = new ItemViewList
+            {
+                Items = itemsList,
+                Count = count
+            };
+            return itemViewList;
+        }
+
+        public async Task<ItemView> GetByIdAsync(long id, params Expression<Func<Item, object>>[] includes)
+        {
+            var item = await _repository.GetByIdAsync(id, includes);
+            return _mapper.Map<ItemView>(item);
+        }
+
+        public async Task<ItemViewList> GetByFilter(ItemQuery query)
+        {
             var name = query.Name.Trim();
             var items = (await _repository.GetAllAsync(x => x.Name.Contains(name, StringComparison.OrdinalIgnoreCase) &&
                                                             x.Category.Name.Contains(query.Category) &&
-                                                            x.Type.Name.Contains(query.Type), includes));
+                                                            x.Type.Name.Contains(query.Type), item => item.Type,item => item.Category));
             if (query.Cost != 0)
             {
-                items=items.Where(x=>x.Cost.Equals(query.Cost));
+                items = items.Where(x => x.Cost.Equals(query.Cost));
             }
+
             switch (query.SelectedSort)
             {
                 case "nameasc":
@@ -81,12 +101,6 @@ namespace Store.BL.Services
                 Count = count
             };
             return itemViewList;
-        }
-
-        public async Task<ItemView> GetByIdAsync(long id, params Expression<Func<Item, object>>[] includes)
-        {
-            var item = await _repository.GetByIdAsync(id, includes);
-            return _mapper.Map<ItemView>(item);
         }
 
         public async Task AddAsync(ItemCreateDto entity)
