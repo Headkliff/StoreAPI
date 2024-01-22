@@ -11,5 +11,7 @@ namespace Store.BL.Models
         [Required]
         [MinLength(8)]
         public string Password { get; set; }
+
+        public string Email { get; set; }
     }
 }
